@@ -11,7 +11,28 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 // Dang Nhap Box
-                Column(),
+                Column(
+                  children: <Widget>[
+                    Text('Đăng Nhập'),
+                    Form(
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                            ),
+                            
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 // Footer
                 Column(
                   children: <Widget>[
