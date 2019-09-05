@@ -8,8 +8,11 @@ class LoginScreen extends StatelessWidget {
         child: Scaffold(
           body: Container(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                SizedBox(
+                  height: 50,
+                ),
                 // Dang Nhap Box
                 Column(
                   children: <Widget>[
