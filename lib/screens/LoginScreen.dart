@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: MaterialApp(
-        home: Scaffold(
+    return MaterialApp(
+      home: SafeArea(
+        child: Scaffold(
           body: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
