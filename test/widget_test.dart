@@ -16,7 +16,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(GCall());
 
-    expect(find.byWidget(MaterialApp()), findsOneWidget);
+    expect(find.byWidget(Scaffold()), findsOneWidget);
 
   });
 }
