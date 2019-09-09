@@ -5,6 +5,7 @@ import 'providers/auth_provider.dart';
 
 import 'package:gcall/screens/LoginScreen.dart';
 import 'screens/HistoryScreen.dart';
+import 'screens/SplashScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -18,18 +19,28 @@ class GCall extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
       ],
-      child: MaterialApp(
+      child: Consumer<Auth>(builder: (context, auth, _) => MaterialApp(
         theme: ThemeData.light().copyWith(
           primaryColor: Pallete.primaryColor,
           backgroundColor: Colors.white,
         ),
-        home: LoginScreen(),
+        home: auth.isAuth()
+              ? CallHistory()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (context, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : LoginScreen(),
+                ),
         routes: {
           LoginScreen.routeName: (context) => LoginScreen(),
           CallHistory.routeName: (context) => CallHistory(),
 
         },
-      ),
+      ),)  
+      
     );
   }
 }
