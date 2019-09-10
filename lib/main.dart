@@ -20,12 +20,13 @@ class GCall extends StatelessWidget {
         ChangeNotifierProvider.value(value: Auth()),
       ],
       child: Consumer<Auth>(builder: (context, auth, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(
           primaryColor: Pallete.primaryColor,
           backgroundColor: Colors.white,
         ),
-        home: auth.isAuth()
-              ? CallHistory()
+        home: true // auth.isAuth()
+              ? HistoryScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (context, authResultSnapshot) =>
@@ -36,7 +37,7 @@ class GCall extends StatelessWidget {
                 ),
         routes: {
           LoginScreen.routeName: (context) => LoginScreen(),
-          CallHistory.routeName: (context) => CallHistory(),
+          HistoryScreen.routeName: (context) => HistoryScreen(),
 
         },
       ),)  

@@ -89,7 +89,7 @@ class _AuthCardState extends State<AuthCard> {
       await Provider.of<Auth>(context)
           .authenticate(_authData['email'], _authData['password']);
 
-      Navigator.of(context).pushReplacementNamed(CallHistory.routeName);
+      Navigator.of(context).pushReplacementNamed(HistoryScreen.routeName);
 
     } catch (error) {
       final alertMess = 'Email hoặc mật khẩu không đúng. Vui lòng thử lại!';
