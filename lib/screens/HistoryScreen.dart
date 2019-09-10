@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/Pallete.dart' as Pallete;
+
 class HistoryScreen extends StatefulWidget {
   static const routeName = './HistoryScreen';
 
@@ -50,11 +52,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.access_time),
           title: Text('Home'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
+          icon: ImageIcon(AssetImage('assets/icons/contact.png')),
           title: Text('Business'),
         ),
         BottomNavigationBarItem(
@@ -67,7 +69,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         )
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: Pallete.primaryColor,
       onTap: _onItemTapped,
       ),
     );
