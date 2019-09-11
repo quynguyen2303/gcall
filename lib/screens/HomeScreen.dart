@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'CallHistoryScreen.dart';
+
 import '../config/Pallete.dart' as Pallete;
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = './HistoryScreen';
+  static const routeName = './home';
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,11 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    CallHistoryScreen(),
     Text(
       'Index 1: Business',
       style: optionStyle,
@@ -43,13 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'LỊCH SỬ',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      ),
+      
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

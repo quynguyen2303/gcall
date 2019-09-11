@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
 
-import 'package:gcall/screens/LoginScreen.dart';
+import 'screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
+import 'screens/CallHistoryScreen.dart';
 import 'screens/SplashScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
@@ -38,6 +39,7 @@ class GCall extends StatelessWidget {
         routes: {
           LoginScreen.routeName: (context) => LoginScreen(),
           HomeScreen.routeName: (context) => HomeScreen(),
+          CallHistoryScreen.routeName: (context) => CallHistoryScreen()
 
         },
       ),)  
