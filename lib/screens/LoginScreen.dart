@@ -5,7 +5,7 @@ import '../config/Pallete.dart' as Pallete;
 
 import '../providers/auth_provider.dart';
 
-import 'HistoryScreen.dart';
+import 'HomeScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = './LoginScreen';
@@ -89,7 +89,7 @@ class _AuthCardState extends State<AuthCard> {
       await Provider.of<Auth>(context)
           .authenticate(_authData['email'], _authData['password']);
 
-      Navigator.of(context).pushReplacementNamed(HistoryScreen.routeName);
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
 
     } catch (error) {
       final alertMess = 'Email hoặc mật khẩu không đúng. Vui lòng thử lại!';
