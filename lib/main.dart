@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 
 import 'package:gcall/screens/LoginScreen.dart';
-import 'screens/HistoryScreen.dart';
+import 'screens/HomeScreen.dart';
 import 'screens/SplashScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
@@ -26,7 +26,7 @@ class GCall extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
         home: true // auth.isAuth()
-              ? HistoryScreen()
+              ? HomeScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (context, authResultSnapshot) =>
@@ -37,7 +37,7 @@ class GCall extends StatelessWidget {
                 ),
         routes: {
           LoginScreen.routeName: (context) => LoginScreen(),
-          HistoryScreen.routeName: (context) => HistoryScreen(),
+          HomeScreen.routeName: (context) => HomeScreen(),
 
         },
       ),)  
