@@ -23,6 +23,7 @@ class GCall extends StatelessWidget {
       child: Consumer<Auth>(builder: (context, auth, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(
+          
           primaryColor: Pallete.primaryColor,
           backgroundColor: Colors.white,
         ),

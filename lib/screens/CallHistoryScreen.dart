@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../config/Pallete.dart' as Pallete;
+import '../config/Styles.dart';
+
+import '../widgets/CallHistoryWidget.dart';
 
 class CallHistoryScreen extends StatefulWidget {
   static const routeName = './callhistory';
@@ -16,7 +19,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
         centerTitle: true,
         title: Text(
           'LỊCH SỬ',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: kHeaderTextStyle,
         ),
       ),
       body: DefaultTabController(
@@ -53,7 +56,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    Icon(Icons.directions_car),
+                    CallHistoryWidget(),
                     Icon(Icons.directions_transit),
                     Icon(Icons.directions_bike),
                     Icon(Icons.directions_bike),

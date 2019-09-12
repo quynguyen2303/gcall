@@ -51,19 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.access_time),
-            title: Text('Home'),
+            title: Text(''),
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('assets/icons/contact.png')),
-            title: Text('Business'),
+            title: Text(''),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            title: Text('School'),
+            icon: ImageIcon(AssetImage('assets/icons/keypad.png')),
+            title: Text(''),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.reorder),
-            title: Text('Reorder'),
+            icon: Icon(Icons.info_outline),
+            title: Text(''),
           )
         ],
         currentIndex: _selectedIndex,
