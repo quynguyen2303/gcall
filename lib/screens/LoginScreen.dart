@@ -8,7 +8,7 @@ import '../providers/auth_provider.dart';
 import 'HomeScreen.dart';
 
 class LoginScreen extends StatelessWidget {
-  static const routeName = './LoginScreen';
+  static const routeName = './login';
 
   @override
   Widget build(BuildContext context) {
