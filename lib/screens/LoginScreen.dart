@@ -90,7 +90,6 @@ class _AuthCardState extends State<AuthCard> {
           .authenticate(_authData['email'], _authData['password']);
 
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-
     } catch (error) {
       final alertMess = 'Email hoặc mật khẩu không đúng. Vui lòng thử lại!';
       _showErrorMess(alertMess);
@@ -110,7 +109,10 @@ class _AuthCardState extends State<AuthCard> {
               actions: <Widget>[
                 RaisedButton(
                   color: Pallete.primaryColor,
-                  child: Text('Thử Lại', style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'Thử Lại',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -123,6 +125,7 @@ class _AuthCardState extends State<AuthCard> {
   void initState() {
     _passwordVisible = false;
     _isLoading = false;
+    super.initState();
   }
 
   @override

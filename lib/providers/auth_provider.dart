@@ -11,20 +11,14 @@ class Auth with ChangeNotifier {
   // DateTime _expiryDate;
 
   bool isAuth() {
-    print('Auto Auth');
-    print(_token != null);
+    // print('Auto Auth');
+    // print(_token != null);
     return _token != null;
   }
 
-  // String get token {
-  //   if (_expiryDate != null &&
-  //       _expiryDate.isAfter(DateTime.now()) &&
-  //       _token != null) {
-  //     return _token;
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  String get token {
+    return _token;
+  }
 
   String get userId {
     return _userId;
@@ -32,17 +26,17 @@ class Auth with ChangeNotifier {
 
   Future<void> authenticate(String email, String password) async {
     final String url = 'https://mobile-docker.gcall.vn/signin';
-    print('$email + $password');
+    // print('$email + $password');
     Dio dio = Dio();
 
     try {
       // authenticate from server
-      print('Start Authenticate');
+      // print('Start Authenticate');
       final response = await dio.post(
         url,
         data: {'email': email, 'password': password},
       );
-      print('Done Authenticate');
+      // print('Done Authenticate');
       // store the user data if success
       _token = response.data['result']['_id'];
       _userId = response.data['result']['idUser'];
@@ -57,13 +51,13 @@ class Auth with ChangeNotifier {
 
       // Store user data locally for auto login
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print('After prefs');
+      // print('After prefs');
       final userData = json.encode({
         'token': _token,
         'userId': _userId,
         // 'expiryDate': _expiryDate.toIso8601String(),
       });
-      print('After userData');
+      // print('After userData');
       prefs.setString(
         'userData',
         userData,

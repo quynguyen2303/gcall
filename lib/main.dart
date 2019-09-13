@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
+import 'providers/call_logs_provider.dart';
 
 import 'screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
@@ -17,34 +18,35 @@ class GCall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: Auth()),
-      ],
-      child: Consumer<Auth>(builder: (context, auth, _) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.light().copyWith(
-          
-          primaryColor: Pallete.primaryColor,
-          backgroundColor: Colors.white,
-        ),
-        home: true // auth.isAuth()
-              ? HomeScreen()
-              : FutureBuilder(
-                  future: auth.tryAutoLogin(),
-                  builder: (context, authResultSnapshot) =>
-                      authResultSnapshot.connectionState ==
-                              ConnectionState.waiting
-                          ? SplashScreen()
-                          : LoginScreen(),
-                ),
-        routes: {
-          LoginScreen.routeName: (context) => LoginScreen(),
-          HomeScreen.routeName: (context) => HomeScreen(),
-          CallHistoryScreen.routeName: (context) => CallHistoryScreen()
-
-        },
-      ),)  
-      
-    );
+        providers: [
+          ChangeNotifierProvider.value(value: Auth()),
+          ChangeNotifierProxyProvider<Auth, CallLogs>(
+            builder: (context, auth, previousCallLogs) => CallLogs(auth.token),
+          )
+        ],
+        child: Consumer<Auth>(
+          builder: (context, auth, _) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData.light().copyWith(
+              primaryColor: Pallete.primaryColor,
+              backgroundColor: Colors.white,
+            ),
+            home: auth.isAuth()
+                ? HomeScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : LoginScreen(),
+                  ),
+            routes: {
+              LoginScreen.routeName: (context) => LoginScreen(),
+              HomeScreen.routeName: (context) => HomeScreen(),
+              CallHistoryScreen.routeName: (context) => CallHistoryScreen()
+            },
+          ),
+        ));
   }
 }

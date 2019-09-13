@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../config/Styles.dart';
 import '../config/Pallete.dart' as Pallete;
 
-//  List<Map> _callHistoryList = [
-//   {
-//     'initial': 'AP',
-//     'name': 'Thiên Đặng',
-
-//   },
-//   {}
-// ];
+import '../providers/call_logs_provider.dart';
 
 class CallHistoryWidget extends StatefulWidget {
   @override
@@ -18,9 +12,40 @@ class CallHistoryWidget extends StatefulWidget {
 }
 
 class _CallHistoryWidgetState extends State<CallHistoryWidget> {
+  int pageNumber;
+  ScrollController _scrollController;
+
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      setState(() {
+        pageNumber += 1;
+        print('Got the bootom and the page is $pageNumber');
+      });
+    }
+    if (_scrollController.offset <=
+            _scrollController.position.minScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      print('Got the top');
+    }
+  }
+
+  @override
+  void initState() {
+    pageNumber = 1;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final callLogs = Provider.of<CallLogs>(context);
+    callLogs.fetchAndSetCallLogs(pageNumber);
+
     return ListView.builder(
+        controller: _scrollController,
         padding: EdgeInsets.symmetric(vertical: 10),
         itemCount: 10,
         itemBuilder: (context, index) {
