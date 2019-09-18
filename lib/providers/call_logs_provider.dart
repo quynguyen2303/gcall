@@ -62,7 +62,7 @@ class CallLogs extends ChangeNotifier {
   Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
     // Set up Call Logs List
     // Set up the filter
-    print(filter);
+    // print(filter);
     setFilter(filter);
     // Set up header with _token
     setUpDioWithHeader();
@@ -147,9 +147,23 @@ class CallLogs extends ChangeNotifier {
     }
   }
 
-  String getInitialLetter(firstName, lastName) {
+  String getInitialLetter(String firstName, String lastName) {
     //TODO: Implement to get 2 initial letter
-    return 'PQ';
+    String name;
+    // print(firstName + ' and ' + lastName);
+    if (firstName == '') {
+      name = lastName[0];
+    } else if (lastName == '') {
+      final splittedName = firstName.split(' ');
+      if (splittedName.length > 1) {
+        name = splittedName[0][0] + splittedName[1][0];
+      } else {
+        name = lastName[0];
+      }
+    } else {
+      name = firstName[0] + lastName[0];
+    }
+    return name;
   }
 }
 
