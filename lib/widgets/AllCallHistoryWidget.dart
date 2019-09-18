@@ -14,9 +14,13 @@ class AllCallHistoryWidget extends StatefulWidget {
   _AllCallHistoryWidgetState createState() => _AllCallHistoryWidgetState();
 }
 
-class _AllCallHistoryWidgetState extends State<AllCallHistoryWidget> {
-  int pageNumber;
+class _AllCallHistoryWidgetState extends State<AllCallHistoryWidget>
+    with AutomaticKeepAliveClientMixin {
+  int pageNumber = 1;
+  final filter = '';
+
   ScrollController _scrollController;
+  Future<void> _loadingCallLogs;
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -24,6 +28,7 @@ class _AllCallHistoryWidgetState extends State<AllCallHistoryWidget> {
         !_scrollController.position.outOfRange) {
       setState(() {
         pageNumber += 1;
+        Provider.of<CallLogs>(context, listen: false).fetchAndSetCallLogs(pageNumber, filter);
       });
 
       // print('Got the bootom and the page is $pageNumber');
@@ -36,24 +41,28 @@ class _AllCallHistoryWidgetState extends State<AllCallHistoryWidget> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
-    pageNumber = 1;
+    // pageNumber = 1;
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    _loadingCallLogs = Provider.of<CallLogs>(context, listen: false)
+        .fetchAndSetCallLogs(pageNumber, filter);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // final callLogs = Provider.of<CallLogs>(context);
     // callLogs.fetchAndSetCallLogs(pageNumber);
     // final filter = widget.filter;
     // print('CallHistoryWidger filter is $filter');
-    final filter = '';
 
     return FutureBuilder(
-      future: Provider.of<CallLogs>(context)
-          .fetchAndSetCallLogs(pageNumber, filter),
+      future: _loadingCallLogs,
       builder: (context, dataSnapshot) {
         if (dataSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -74,7 +83,8 @@ class _AllCallHistoryWidgetState extends State<AllCallHistoryWidget> {
                 itemCount: callLogsData.allCallLogs.length,
                 itemBuilder: (context, index) => CallLogItem(
                     name: callLogsData.allCallLogs[index].name,
-                    initialLetter: callLogsData.allCallLogs[index].initialLetter,
+                    initialLetter:
+                        callLogsData.allCallLogs[index].initialLetter,
                     date: callLogsData.allCallLogs[index].dateCreated,
                     time: callLogsData.allCallLogs[index].timeCreated,
                     status: callLogsData.allCallLogs[index].statusString),

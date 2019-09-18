@@ -11,12 +11,19 @@ class IncomingCallHistoryWidget extends StatefulWidget {
   IncomingCallHistoryWidget({this.filter});
 
   @override
-  _IncomingCallHistoryWidgetState createState() => _IncomingCallHistoryWidgetState();
+  _IncomingCallHistoryWidgetState createState() =>
+      _IncomingCallHistoryWidgetState();
 }
 
-class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget> {
-  int pageNumber;
+class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget>
+    with AutomaticKeepAliveClientMixin<IncomingCallHistoryWidget> {
+  int pageNumber = 1;
   ScrollController _scrollController;
+  Future<void> _loadingCallLogs;
+  final filter = 'incoming';
+
+  @override
+  bool get wantKeepAlive => true;
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -24,8 +31,9 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget> {
         !_scrollController.position.outOfRange) {
       setState(() {
         pageNumber += 1;
+        Provider.of<CallLogs>(context, listen: false)
+        .fetchAndSetCallLogs(pageNumber, filter);
       });
-
       // print('Got the bootom and the page is $pageNumber');
     }
     // if (_scrollController.offset <=
@@ -37,23 +45,25 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget> {
 
   @override
   void initState() {
-    pageNumber = 1;
+    // print('init again');
+    // pageNumber = 1;
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    _loadingCallLogs = Provider.of<CallLogs>(context, listen: false)
+        .fetchAndSetCallLogs(pageNumber, filter);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    // print(pageNumber);
     // final callLogs = Provider.of<CallLogs>(context);
     // callLogs.fetchAndSetCallLogs(pageNumber);
     // final filter = widget.filter;
     // print('CallHistoryWidger filter is $filter');
-    final filter = 'incoming';
-
     return FutureBuilder(
-      future: Provider.of<CallLogs>(context)
-          .fetchAndSetCallLogs(pageNumber, filter),
+      future: _loadingCallLogs,
       builder: (context, dataSnapshot) {
         if (dataSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -74,7 +84,8 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget> {
                 itemCount: callLogsData.incomingCallLogs.length,
                 itemBuilder: (context, index) => CallLogItem(
                     name: callLogsData.incomingCallLogs[index].name,
-                    initialLetter: callLogsData.incomingCallLogs[index].initialLetter,
+                    initialLetter:
+                        callLogsData.incomingCallLogs[index].initialLetter,
                     date: callLogsData.incomingCallLogs[index].dateCreated,
                     time: callLogsData.incomingCallLogs[index].timeCreated,
                     status: callLogsData.incomingCallLogs[index].statusString),

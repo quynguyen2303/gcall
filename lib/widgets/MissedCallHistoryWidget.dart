@@ -11,12 +11,16 @@ class MissedCallHistoryWidget extends StatefulWidget {
   MissedCallHistoryWidget({this.filter});
 
   @override
-  _MissedCallHistoryWidgetState createState() => _MissedCallHistoryWidgetState();
+  _MissedCallHistoryWidgetState createState() =>
+      _MissedCallHistoryWidgetState();
 }
 
-class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget> {
-  int pageNumber;
+class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget>
+    with AutomaticKeepAliveClientMixin {
+  int pageNumber = 1;
+  final filter = 'missed';
   ScrollController _scrollController;
+  Future<void> _loadingCallLogs;
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -24,6 +28,7 @@ class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget> {
         !_scrollController.position.outOfRange) {
       setState(() {
         pageNumber += 1;
+        Provider.of<CallLogs>(context, listen: false).fetchAndSetCallLogs(pageNumber, filter);
       });
 
       // print('Got the bootom and the page is $pageNumber');
@@ -36,10 +41,15 @@ class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
-    pageNumber = 1;
+    // pageNumber = 1;
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    _loadingCallLogs = Provider.of<CallLogs>(context, listen: false)
+        .fetchAndSetCallLogs(pageNumber, filter);
     super.initState();
   }
 
@@ -49,11 +59,9 @@ class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget> {
     // callLogs.fetchAndSetCallLogs(pageNumber);
     // final filter = widget.filter;
     // print('CallHistoryWidger filter is $filter');
-    final filter = 'missed';
-
+    super.build(context);
     return FutureBuilder(
-      future: Provider.of<CallLogs>(context)
-          .fetchAndSetCallLogs(pageNumber, filter),
+      future: _loadingCallLogs,
       builder: (context, dataSnapshot) {
         if (dataSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -74,7 +82,8 @@ class _MissedCallHistoryWidgetState extends State<MissedCallHistoryWidget> {
                 itemCount: callLogsData.missedCallLogs.length,
                 itemBuilder: (context, index) => CallLogItem(
                     name: callLogsData.missedCallLogs[index].name,
-                    initialLetter: callLogsData.missedCallLogs[index].initialLetter,
+                    initialLetter:
+                        callLogsData.missedCallLogs[index].initialLetter,
                     date: callLogsData.missedCallLogs[index].dateCreated,
                     time: callLogsData.missedCallLogs[index].timeCreated,
                     status: callLogsData.missedCallLogs[index].statusString),

@@ -82,46 +82,21 @@ class CallLogs extends ChangeNotifier {
         final twoLetter = getInitialLetter(firstName, lastName);
         // print(firstName + lastName + startedAt.toString() + direction + status);
         // });
+        final newCallLog = CallLog(
+          name: '$firstName $lastName',
+          initialLetter: twoLetter,
+          status: status,
+          dateCreated: '${startedAt.day}/${startedAt.month}',
+          timeCreated: '${startedAt.hour}:${startedAt.minute}',
+        );
         if (filter == 'incoming') {
-          _incomingCallLogs.add(
-            CallLog(
-              name: '$firstName $lastName',
-              initialLetter: twoLetter,
-              status: status,
-              dateCreated: '${startedAt.day}/${startedAt.month}',
-              timeCreated: '${startedAt.hour}:${startedAt.minute}',
-            ),
-          );
+          _incomingCallLogs.add(newCallLog);
         } else if (filter == 'outgoing') {
-          _outgoingCallLogs.add(
-            CallLog(
-              name: '$firstName $lastName',
-              initialLetter: twoLetter,
-              status: status,
-              dateCreated: '${startedAt.day}/${startedAt.month}',
-              timeCreated: '${startedAt.hour}:${startedAt.minute}',
-            ),
-          );
+          _outgoingCallLogs.add(newCallLog);
         } else if (filter == 'missed') {
-          _missedCallLogs.add(
-            CallLog(
-              name: '$firstName $lastName',
-              initialLetter: twoLetter,
-              status: status,
-              dateCreated: '${startedAt.day}/${startedAt.month}',
-              timeCreated: '${startedAt.hour}:${startedAt.minute}',
-            ),
-          );
+          _missedCallLogs.add(newCallLog);
         } else {
-          _allCallLogs.add(
-            CallLog(
-              name: '$firstName $lastName',
-              initialLetter: twoLetter,
-              status: status,
-              dateCreated: '${startedAt.day}/${startedAt.month}',
-              timeCreated: '${startedAt.hour}:${startedAt.minute}',
-            ),
-          );
+          _allCallLogs.add(newCallLog);
         }
       });
 
