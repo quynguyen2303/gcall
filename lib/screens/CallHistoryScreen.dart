@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/Pallete.dart' as Pallete;
-import '../config/Styles.dart';
+import '../config/Constants.dart';
 
 import '../widgets/CallHistoryWidget.dart';
 

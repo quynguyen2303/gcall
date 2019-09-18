@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'Pallete.dart' as Pallete;
 
+// Icons
+const kPhoneIncoming = 'assets/icons/phone_incoming.png';
+const kPhoneButton = 'assets/icons/phone_button.png';
+
+// Fonts and Text Styles
 const _primaryFontFamily = 'OpenSans';
 
 const kHeaderTextStyle = TextStyle(

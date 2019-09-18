@@ -5,11 +5,15 @@ enum CallStatus { outgoing, incoming, missed }
 
 class CallLogs extends ChangeNotifier {
   final String _token;
-  List<CallLog> callLogs = [];
+  List<CallLog> _callLogs = [];
 
   String url = 'https://mobile-docker.gcall.vn/calllogs';
 
   CallLogs(this._token);
+
+  List<CallLog> get callLogs {
+    return _callLogs;
+  }
 
   Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
     // Call API and get the first page of Call Logs
@@ -25,7 +29,7 @@ class CallLogs extends ChangeNotifier {
     try {
       Response response = await dio.get(url, queryParameters: {
         'page': pageNumber,
-        // 'filter': '{"direction": "incoming"}' ,
+        'filter': '{"direction": "incoming"}' ,
       });
       // print(response.data['result']);
       response.data['result'].forEach((e) {
@@ -37,23 +41,23 @@ class CallLogs extends ChangeNotifier {
         // print(firstName + lastName + startedAt.toString() + direction + status);
         // });
 
-        callLogs.add(
+        _callLogs.add(
           CallLog(
-              name: '$firstName $lastName',
-              initialLetter: twoLetter,
-              status: status,
-              dateCreated:
-                  '${startedAt.day}/${startedAt.month}',
-              timeCreated: '${startedAt.hour}:${startedAt.minute}',),
+            name: '$firstName $lastName',
+            initialLetter: twoLetter,
+            status: status,
+            dateCreated: '${startedAt.day}/${startedAt.month}',
+            timeCreated: '${startedAt.hour}:${startedAt.minute}',
+          ),
         );
       });
 
-      print(callLogs.length);
-      for (var i = 0; i < callLogs.length; i++) {
-        print(callLogs[i]);
+      print(_callLogs.length);
+      for (var i = 0; i < _callLogs.length; i++) {
+        print(_callLogs[i]);
       }
-      // for (var i = 0; i < response.data['result'].length; i++) {
-      //   print(response.data['result'][i]);}
+      for (var i = 0; i < response.data['result'].length; i++) {
+        print(response.data['result'][i]);}
 
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
@@ -78,12 +82,21 @@ class CallLogs extends ChangeNotifier {
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
   }
 
-  checkCallLogStatus(e, e2) {
-    //To-Do: Implement check status
-    return CallStatus.incoming;
+  checkCallLogStatus(String direction, String status) {
+    print(direction + status);
+    if (direction == 'outgoing') {
+      return CallStatus.outgoing;
+    } else {
+      if (status == 'missed') {
+        return CallStatus.missed;
+      } else {
+        return CallStatus.incoming;
+      }
+    }
   }
 
   getInitialLetter(firstName, lastName) {
+    //TODO: Implement to get 2 initial letter
     return 'PQ';
   }
 }
@@ -96,11 +109,29 @@ class CallLog {
   String timeCreated;
   // DateTime startedTime;
 
-  CallLog({this.name, this.initialLetter, this.status, this.dateCreated, this.timeCreated});
-  
+  CallLog(
+      {this.name,
+      this.initialLetter,
+      this.status,
+      this.dateCreated,
+      this.timeCreated});
+
+  get statusString {
+    if (status == CallStatus.outgoing) {
+      return 'outgoing';
+    } else {
+      if (status == CallStatus.missed) {
+        return 'missed';
+      } else {
+        return 'incoming';
+      }
+    }
+  }
+
   @override
   String toString() {
     // TODO: implement toString
+    
     return 'The call log from $name at $dateCreated at $timeCreated and the status is $status';
   }
 }

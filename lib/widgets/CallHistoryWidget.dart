@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../config/Styles.dart';
+import '../config/Constants.dart';
 import '../config/Pallete.dart' as Pallete;
 
 import '../providers/call_logs_provider.dart';
@@ -41,66 +41,132 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final callLogs = Provider.of<CallLogs>(context);
-    callLogs.fetchAndSetCallLogs(pageNumber);
+    // final callLogs = Provider.of<CallLogs>(context);
+    // callLogs.fetchAndSetCallLogs(pageNumber);
 
-    return ListView.builder(
-        controller: _scrollController,
-        padding: EdgeInsets.symmetric(vertical: 10),
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Card(
-              child: Row(mainAxisSize: MainAxisSize.max,
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                Container(
-                  padding: EdgeInsets.only(right: 20),
-                  child: ButtonTheme(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    minWidth: 20,
-                    child: OutlineButton(
-                      child: Text('AP'),
-                      onPressed: () {},
-                    ),
+    return FutureBuilder(
+      future: Provider.of<CallLogs>(context).fetchAndSetCallLogs(pageNumber),
+      builder: (context, dataSnapshot) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          if (dataSnapshot.error != null) {
+            // Hanlding the error
+            print(dataSnapshot.error);
+            return Center(
+              child: Text('Got an error!'),
+            );
+          } else {
+            return Consumer<CallLogs>(
+              builder: (context, callLogsData, child) => ListView.builder(
+                controller: _scrollController,
+                padding: EdgeInsets.symmetric(vertical: 10),
+                itemCount: callLogsData.callLogs.length,
+                itemBuilder: (context, index) => CallLogItem(
+                    name: callLogsData.callLogs[index].name,
+                    initialLetter: callLogsData.callLogs[index].initialLetter,
+                    date: callLogsData.callLogs[index].dateCreated,
+                    time: callLogsData.callLogs[index].timeCreated,
+                    status: callLogsData.callLogs[index].statusString),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+}
+
+class CallLogItem extends StatelessWidget {
+  final String name;
+  final String initialLetter;
+  final String date;
+  final String time;
+  final String status;
+
+  CallLogItem(
+      {this.name, this.initialLetter, this.date, this.time, this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            padding: EdgeInsets.only(right: 20),
+            child: ButtonTheme(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              minWidth: 20,
+              child: OutlineButton(
+                child: Text('$initialLetter'),
+                onPressed: () {},
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                '$name',
+                style: kContactCallHistoryTextStyle,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(right: 10),
+                    child: checkStatusIcon(status),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      'Thien Dang',
-                      style: kContactCallHistoryTextStyle,
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Icon(
-                              Icons.phone_missed,
-                              size: 14,
-                              color: Colors.red,
-                            )),
-                        Text(
-                          '4/11 luc 14:11',
-                          style: kTimeCallHistoryTextStyle,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Spacer(),
-                IconButton(
-                  icon: ImageIcon(
-                    AssetImage('assets/icons/call-button.png'),
-                    color: Pallete.primaryColor,
-                    size: 32,
+                  Text(
+                    '$date lúc $time',
+                    style: kTimeCallHistoryTextStyle,
                   ),
-                  onPressed: () {},
-                )
-              ]));
-        });
+                ],
+              ),
+            ],
+          ),
+          Spacer(),
+          IconButton(
+            icon: ImageIcon(
+              AssetImage(kPhoneButton),
+              color: Pallete.primaryColor,
+              size: 32,
+            ),
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
+  }
+
+  checkStatusIcon(String status) {
+
+    if (status == 'outgoing') {
+      return Icon(
+        Icons.phone_forwarded,
+        size: 14,
+        color: Colors.yellow,
+      );
+    } else {
+      if (status == 'missed') {
+        return Icon(
+          Icons.phone_missed,
+          size: 14,
+          color: Colors.red,
+        );
+      } else {
+        return ImageIcon(
+          AssetImage(kPhoneIncoming),
+          size: 14,
+          color: Colors.green,
+        );
+      }
+    }
   }
 }
