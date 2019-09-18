@@ -5,60 +5,133 @@ enum CallStatus { outgoing, incoming, missed }
 
 class CallLogs extends ChangeNotifier {
   final String _token;
-  List<CallLog> _callLogs = [];
+  String stringFilter;
+  List<CallLog> _allCallLogs = [];
+  List<CallLog> _incomingCallLogs = [];
+  List<CallLog> _outgoingCallLogs = [];
+
+  List<CallLog> _missedCallLogs = [];
+
+  var dio = Dio();
 
   String url = 'https://mobile-docker.gcall.vn/calllogs';
 
   CallLogs(this._token);
 
-  List<CallLog> get callLogs {
-    return _callLogs;
+  List<CallLog> get allCallLogs {
+    return _allCallLogs;
   }
 
-  Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
-    // Call API and get the first page of Call Logs
+  List<CallLog> get incomingCallLogs {
+    return _incomingCallLogs;
+  }
 
-    // Set up header with _token
-    var dio = Dio();
+  List<CallLog> get outgoingCallLogs {
+    return _outgoingCallLogs;
+  }
+
+  List<CallLog> get missedCallLogs {
+    return _missedCallLogs;
+  }
+
+  // Set up Dio with header
+  void setUpDioWithHeader() {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       options.headers['x-sessiontoken'] = _token;
     }));
-    print('Page number in provider is $pageNumber');
+  }
+
+  void setFilter(String filter) {
+    if (filter == 'incoming') {
+      stringFilter =
+          '{"direction": "incoming" , "status": { "\$ne" : "missed" } }';
+    } else if (filter == 'outgoing') {
+      stringFilter = '{ "direction": "outgoing" } ';
+    } else if (filter == 'missed') {
+      stringFilter = '{ "status": "missed" } ';
+    } else {
+      stringFilter = '';
+    }
+
+    //  }
+    // 'filter':  ,
+    // 'filter':  ,
+  }
+
+  Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
+    // Set up Call Logs List
+    // Set up the filter
+    print(filter);
+    setFilter(filter);
+    // Set up header with _token
+    setUpDioWithHeader();
+    // print('Page number in provider is $pageNumber');
 
     try {
       Response response = await dio.get(url, queryParameters: {
         'page': pageNumber,
-        'filter': '{"direction": "incoming"}' ,
+        'filter': stringFilter,
       });
       // print(response.data['result']);
       response.data['result'].forEach((e) {
-        var firstName = e['contact']['firstName'];
-        var lastName = e['contact']['lastName'];
-        var startedAt = DateTime.fromMillisecondsSinceEpoch(e['createdAt']);
-        var status = checkCallLogStatus(e['direction'], e['status']);
-        var twoLetter = getInitialLetter(firstName, lastName);
+        final firstName = e['contact']['firstName'];
+        final lastName = e['contact']['lastName'];
+        final startedAt = DateTime.fromMillisecondsSinceEpoch(e['createdAt']);
+        final status = checkCallLogStatus(e['direction'], e['status']);
+        final twoLetter = getInitialLetter(firstName, lastName);
         // print(firstName + lastName + startedAt.toString() + direction + status);
         // });
-
-        _callLogs.add(
-          CallLog(
-            name: '$firstName $lastName',
-            initialLetter: twoLetter,
-            status: status,
-            dateCreated: '${startedAt.day}/${startedAt.month}',
-            timeCreated: '${startedAt.hour}:${startedAt.minute}',
-          ),
-        );
+        if (filter == 'incoming') {
+          _incomingCallLogs.add(
+            CallLog(
+              name: '$firstName $lastName',
+              initialLetter: twoLetter,
+              status: status,
+              dateCreated: '${startedAt.day}/${startedAt.month}',
+              timeCreated: '${startedAt.hour}:${startedAt.minute}',
+            ),
+          );
+        } else if (filter == 'outgoing') {
+          _outgoingCallLogs.add(
+            CallLog(
+              name: '$firstName $lastName',
+              initialLetter: twoLetter,
+              status: status,
+              dateCreated: '${startedAt.day}/${startedAt.month}',
+              timeCreated: '${startedAt.hour}:${startedAt.minute}',
+            ),
+          );
+        } else if (filter == 'missed') {
+          _missedCallLogs.add(
+            CallLog(
+              name: '$firstName $lastName',
+              initialLetter: twoLetter,
+              status: status,
+              dateCreated: '${startedAt.day}/${startedAt.month}',
+              timeCreated: '${startedAt.hour}:${startedAt.minute}',
+            ),
+          );
+        } else {
+          _allCallLogs.add(
+            CallLog(
+              name: '$firstName $lastName',
+              initialLetter: twoLetter,
+              status: status,
+              dateCreated: '${startedAt.day}/${startedAt.month}',
+              timeCreated: '${startedAt.hour}:${startedAt.minute}',
+            ),
+          );
+        }
       });
 
-      print(_callLogs.length);
-      for (var i = 0; i < _callLogs.length; i++) {
-        print(_callLogs[i]);
-      }
-      for (var i = 0; i < response.data['result'].length; i++) {
-        print(response.data['result'][i]);}
-
+      // print(_callLogs.length);
+      // for (var i = 0; i < _callLogs.length; i++) {
+      //   print(_callLogs[i]);
+      // }
+      // for (var i = 0; i < response.data['result'].length; i++) {
+      //   print(response.data['result'][i]);
+      // }
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -82,7 +155,11 @@ class CallLogs extends ChangeNotifier {
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
   }
 
-  checkCallLogStatus(String direction, String status) {
+  Future<void> updatePageCallLogs(int pageNumber) async {
+    // TODO: find a way to refactor 4 tabs
+  }
+
+  CallStatus checkCallLogStatus(String direction, String status) {
     print(direction + status);
     if (direction == 'outgoing') {
       return CallStatus.outgoing;
@@ -95,7 +172,7 @@ class CallLogs extends ChangeNotifier {
     }
   }
 
-  getInitialLetter(firstName, lastName) {
+  String getInitialLetter(firstName, lastName) {
     //TODO: Implement to get 2 initial letter
     return 'PQ';
   }
@@ -131,7 +208,7 @@ class CallLog {
   @override
   String toString() {
     // TODO: implement toString
-    
+
     return 'The call log from $name at $dateCreated at $timeCreated and the status is $status';
   }
 }
