@@ -67,7 +67,7 @@ class _AuthCardState extends State<AuthCard> {
   GlobalKey<FormState> _formKey = GlobalKey();
   final _userPasswordController = TextEditingController();
 
-  bool _passwordVisible;
+  bool _passwordSecure;
   bool _isLoading;
 
   Map<String, String> _authData = {
@@ -123,7 +123,7 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   void initState() {
-    _passwordVisible = false;
+    _passwordSecure = true;
     _isLoading = false;
     super.initState();
   }
@@ -153,7 +153,7 @@ class _AuthCardState extends State<AuthCard> {
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _userPasswordController,
-            obscureText: _passwordVisible, //This will obscure text dynamically
+            obscureText: _passwordSecure, //This will obscure text dynamically
             validator: (value) {
               if (value.isEmpty || value.length < 6) {
                 return 'Password is too short!';
@@ -170,14 +170,14 @@ class _AuthCardState extends State<AuthCard> {
               suffixIcon: IconButton(
                 icon: Icon(
                   // Based on passwordVisible state choose the icon
-                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  _passwordSecure ? Icons.visibility_off : Icons.visibility,
                   //  color: Theme.of(context).primaryColorDark,
                   size: 20,
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable
                   setState(() {
-                    _passwordVisible = !_passwordVisible;
+                    _passwordSecure = !_passwordSecure;
                   });
                 },
               ),
