@@ -9,7 +9,6 @@ class CallLogs extends ChangeNotifier {
   List<CallLog> _allCallLogs = [];
   List<CallLog> _incomingCallLogs = [];
   List<CallLog> _outgoingCallLogs = [];
-
   List<CallLog> _missedCallLogs = [];
 
   var dio = Dio();
@@ -124,7 +123,7 @@ class CallLogs extends ChangeNotifier {
       }
       throw (e);
     }
-
+    notifyListeners();
     // print(callLogs);
     // print(callLogs[1]['_id']+ " & contact id: " + callLogs[1]['contact']['_id']);
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
@@ -148,17 +147,19 @@ class CallLogs extends ChangeNotifier {
   }
 
   String getInitialLetter(String firstName, String lastName) {
-    //TODO: Implement to get 2 initial letter
     String name;
     // print(firstName + ' and ' + lastName);
-    if (firstName == '') {
+    if (firstName == '' && lastName != '') {
+      // print(object)
       name = lastName[0];
-    } else if (lastName == '') {
+    } else if (lastName == '' && firstName != '') {
+
       final splittedName = firstName.split(' ');
+      // print(splittedName);
       if (splittedName.length > 1) {
         name = splittedName[0][0] + splittedName[1][0];
       } else {
-        name = lastName[0];
+        name = firstName[0];
       }
     } else {
       name = firstName[0] + lastName[0];
@@ -194,10 +195,9 @@ class CallLog {
     }
   }
 
-  @override
-  String toString() {
-    // TODO: implement toString
-
-    return 'The call log from $name at $dateCreated at $timeCreated and the status is $status';
-  }
+  // @override
+  // String toString() {
+  //   // : implement toString
+  //   return 'The call log from $name at $dateCreated at $timeCreated and the status is $status';
+  // }
 }
