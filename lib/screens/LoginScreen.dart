@@ -135,11 +135,14 @@ class _AuthCardState extends State<AuthCard> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          ListView(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            children: <Widget>[
-              TextFormField(
+          // ListView(
+          //   shrinkWrap: true,
+          //   scrollDirection: Axis.vertical,
+          //   children: <Widget>[
+          //     T
+          //   ],
+          // )
+          TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Email',
                 ),
@@ -193,7 +196,7 @@ class _AuthCardState extends State<AuthCard> {
                 height: 20,
               ),
               if (_isLoading)
-                CircularProgressIndicator()
+                 CircularProgressIndicator()
               else
                 ButtonTheme(
                   buttonColor: Pallete.primaryColor,
@@ -213,8 +216,6 @@ class _AuthCardState extends State<AuthCard> {
                 onPressed: () {},
                 child: Text('Quên mật khẩu?'),
               )
-            ],
-          )
         ],
       ),
     );

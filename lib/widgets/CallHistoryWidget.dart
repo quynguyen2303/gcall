@@ -18,7 +18,7 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
     with AutomaticKeepAliveClientMixin {
   int pageNumber = 1;
   String filter;
-  bool _isLoading;
+  // bool _isLoading;
 
   ScrollController _scrollController;
   Future<void> _loadingCallLogs;
@@ -28,16 +28,16 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
       setState(() {
-        _isLoading = true;
+        // _isLoading = true;
         pageNumber += 1;
+        Provider.of<CallLogs>(context, listen: false)
+            .fetchAndSetCallLogs(pageNumber, filter);
       });
-      Provider.of<CallLogs>(context, listen: false)
-          .fetchAndSetCallLogs(pageNumber, filter);
 
-      print('Loaded');
-      setState(() {
-        _isLoading = false;
-      });
+      // print('Loaded');
+      // setState(() {
+      //   _isLoading = false;
+      // });
 
       // print('Got the bootom and the page is $pageNumber');
     }
@@ -53,7 +53,7 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
 
   @override
   void initState() {
-    _isLoading = false;
+    // _isLoading = false;
     filter = widget.filter;
     // pageNumber = 1;
     _scrollController = ScrollController();
@@ -74,8 +74,7 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
     return FutureBuilder(
       future: _loadingCallLogs,
       builder: (context, dataSnapshot) {
-        if (dataSnapshot.connectionState == ConnectionState.waiting ||
-            _isLoading) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
           );

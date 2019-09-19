@@ -148,7 +148,7 @@ class CallLogs extends ChangeNotifier {
   }
 
   CallStatus checkCallLogStatus(String direction, String status) {
-    print(direction + status);
+    // print(direction + status);
     if (direction == 'outgoing') {
       return CallStatus.outgoing;
     } else {
