@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import '../config/Pallete.dart' as Pallete;
 import '../config/Constants.dart';
 
-import '../widgets/AllCallHistoryWidget.dart';
-import '../widgets/IncomingCallHistoryWidget.dart';
-import '../widgets/OutgoingCallHistoryWidget.dart';
-import '../widgets/MissedCallHistoryWidget.dart';
+import '../widgets/CallHistoryWidget.dart';
+
 
 class CallHistoryScreen extends StatefulWidget {
   static const routeName = './callhistory';
@@ -59,10 +57,10 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    AllCallHistoryWidget(),
-                   IncomingCallHistoryWidget(),
-                    OutgoingCallHistoryWidget(),
-                    MissedCallHistoryWidget(),
+                    CallHistoryWidget(''),
+                    CallHistoryWidget('incoming'),
+                    CallHistoryWidget('outgoing'),
+                    CallHistoryWidget('missed'),
                   ],
                 ),
               ),

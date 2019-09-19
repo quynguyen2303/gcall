@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/call_logs_provider.dart';
@@ -17,6 +18,10 @@ class GCall extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: Auth()),

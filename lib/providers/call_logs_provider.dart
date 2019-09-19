@@ -17,6 +17,20 @@ class CallLogs extends ChangeNotifier {
 
   CallLogs(this._token);
 
+  List<CallLog> getCallLogs(String filter) {
+    if (filter == '') {
+      return _allCallLogs;
+    } else if (filter == 'incoming') {
+      return _incomingCallLogs;
+    } else if (filter == 'outgoing') {
+      return _outgoingCallLogs;
+    } else if (filter == 'missed') {
+      return _missedCallLogs;
+    } else {
+      return [];
+    }
+  }
+
   List<CallLog> get allCallLogs {
     return _allCallLogs;
   }
@@ -153,7 +167,6 @@ class CallLogs extends ChangeNotifier {
       // print(object)
       name = lastName[0];
     } else if (lastName == '' && firstName != '') {
-
       final splittedName = firstName.split(' ');
       // print(splittedName);
       if (splittedName.length > 1) {

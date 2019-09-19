@@ -16,6 +16,7 @@ class LoginScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         body: Container(
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
           child: Column(
@@ -134,78 +135,85 @@ class _AuthCardState extends State<AuthCard> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Email',
-            ),
-            keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              // set the validate rules for email
-              if (value.isEmpty || !value.contains('@')) {
-                return 'Email không chính xác!';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              _authData['email'] = value;
-            },
-          ),
-          TextFormField(
-            keyboardType: TextInputType.text,
-            controller: _userPasswordController,
-            obscureText: _passwordSecure, //This will obscure text dynamically
-            validator: (value) {
-              if (value.isEmpty || value.length < 6) {
-                return 'Password is too short!';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              _authData['password'] = value;
-            },
-            decoration: InputDecoration(
-              labelText: 'Password',
-              hintText: 'Enter your password',
-              // Here is key idea
-              suffixIcon: IconButton(
-                icon: Icon(
-                  // Based on passwordVisible state choose the icon
-                  _passwordSecure ? Icons.visibility_off : Icons.visibility,
-                  //  color: Theme.of(context).primaryColorDark,
-                  size: 20,
+          ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
                 ),
-                onPressed: () {
-                  // Update the state i.e. toogle the state of passwordVisible variable
-                  setState(() {
-                    _passwordSecure = !_passwordSecure;
-                  });
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  // set the validate rules for email
+                  if (value.isEmpty || !value.contains('@')) {
+                    return 'Email không chính xác!';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _authData['email'] = value;
                 },
               ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          if (_isLoading)
-            CircularProgressIndicator()
-          else
-            ButtonTheme(
-              buttonColor: Pallete.primaryColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              minWidth: 300.0,
-              height: 50.0,
-              child: RaisedButton(
-                onPressed: _submit,
-                child: Text(
-                  'ĐĂNG NHẬP',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+              TextFormField(
+                keyboardType: TextInputType.text,
+                controller: _userPasswordController,
+                obscureText:
+                    _passwordSecure, //This will obscure text dynamically
+                validator: (value) {
+                  if (value.isEmpty || value.length < 6) {
+                    return 'Password is too short!';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _authData['password'] = value;
+                },
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  // Here is key idea
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      // Based on passwordVisible state choose the icon
+                      _passwordSecure ? Icons.visibility_off : Icons.visibility,
+                      //  color: Theme.of(context).primaryColorDark,
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      // Update the state i.e. toogle the state of passwordVisible variable
+                      setState(() {
+                        _passwordSecure = !_passwordSecure;
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-          FlatButton(
-            onPressed: () {},
-            child: Text('Quên mật khẩu?'),
+              SizedBox(
+                height: 20,
+              ),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                ButtonTheme(
+                  buttonColor: Pallete.primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  minWidth: 300.0,
+                  height: 50.0,
+                  child: RaisedButton(
+                    onPressed: _submit,
+                    child: Text(
+                      'ĐĂNG NHẬP',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+              FlatButton(
+                onPressed: () {},
+                child: Text('Quên mật khẩu?'),
+              )
+            ],
           )
         ],
       ),

@@ -5,35 +5,40 @@ import 'CallLogItem.dart';
 
 import '../providers/call_logs_provider.dart';
 
-class IncomingCallHistoryWidget extends StatefulWidget {
+class CallHistoryWidget extends StatefulWidget {
   final String filter;
 
-  IncomingCallHistoryWidget({this.filter});
+  CallHistoryWidget(this.filter);
 
   @override
-  _IncomingCallHistoryWidgetState createState() =>
-      _IncomingCallHistoryWidgetState();
+  _CallHistoryWidgetState createState() => _CallHistoryWidgetState();
 }
 
-class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget>
-    with AutomaticKeepAliveClientMixin<IncomingCallHistoryWidget> {
+class _CallHistoryWidgetState extends State<CallHistoryWidget>
+    with AutomaticKeepAliveClientMixin {
   int pageNumber = 1;
+  String filter;
+  bool _isLoading;
+
   ScrollController _scrollController;
   Future<void> _loadingCallLogs;
-  final filter = 'incoming';
-
-  @override
-  bool get wantKeepAlive => true;
 
   void _scrollListener() {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
       setState(() {
+        _isLoading = true;
         pageNumber += 1;
-        Provider.of<CallLogs>(context, listen: false)
-        .fetchAndSetCallLogs(pageNumber, filter);
       });
+      Provider.of<CallLogs>(context, listen: false)
+          .fetchAndSetCallLogs(pageNumber, filter);
+
+      print('Loaded');
+      setState(() {
+        _isLoading = false;
+      });
+
       // print('Got the bootom and the page is $pageNumber');
     }
     // if (_scrollController.offset <=
@@ -44,8 +49,12 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget>
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
-    // print('init again');
+    _isLoading = false;
+    filter = widget.filter;
     // pageNumber = 1;
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
@@ -57,15 +66,16 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // print(pageNumber);
     // final callLogs = Provider.of<CallLogs>(context);
     // callLogs.fetchAndSetCallLogs(pageNumber);
     // final filter = widget.filter;
     // print('CallHistoryWidger filter is $filter');
+
     return FutureBuilder(
       future: _loadingCallLogs,
       builder: (context, dataSnapshot) {
-        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting ||
+            _isLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -81,14 +91,15 @@ class _IncomingCallHistoryWidgetState extends State<IncomingCallHistoryWidget>
               builder: (context, callLogsData, child) => ListView.builder(
                 controller: _scrollController,
                 padding: EdgeInsets.symmetric(vertical: 10),
-                itemCount: callLogsData.incomingCallLogs.length,
+                itemCount: callLogsData.getCallLogs(filter).length,
                 itemBuilder: (context, index) => CallLogItem(
-                    name: callLogsData.incomingCallLogs[index].name,
+                    name: callLogsData.getCallLogs(filter)[index].name,
                     initialLetter:
-                        callLogsData.incomingCallLogs[index].initialLetter,
-                    date: callLogsData.incomingCallLogs[index].dateCreated,
-                    time: callLogsData.incomingCallLogs[index].timeCreated,
-                    status: callLogsData.incomingCallLogs[index].statusString),
+                        callLogsData.getCallLogs(filter)[index].initialLetter,
+                    date: callLogsData.getCallLogs(filter)[index].dateCreated,
+                    time: callLogsData.getCallLogs(filter)[index].timeCreated,
+                    status:
+                        callLogsData.getCallLogs(filter)[index].statusString),
               ),
             );
           }
