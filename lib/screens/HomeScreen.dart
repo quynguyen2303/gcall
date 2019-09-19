@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'CallHistoryScreen.dart';
+import 'ContactScreen.dart';
 
 import '../config/Pallete.dart' as Pallete;
 
@@ -19,10 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static List<Widget> _widgetOptions = <Widget>[
     CallHistoryScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    ContactScreen(),
     Text(
       'Index 2: School',
       style: optionStyle,
@@ -42,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

@@ -20,3 +20,8 @@ const kTimeCallHistoryTextStyle = TextStyle(
     fontSize: 12,
     fontFamily: _primaryFontFamily,
     color: Pallete.primaryTextColor);
+const kContactNameTextStyle = TextStyle(
+    fontSize: 20,
+    color: Pallete.primaryTextColor,
+    fontFamily: _primaryFontFamily,
+    fontWeight: FontWeight.w600);

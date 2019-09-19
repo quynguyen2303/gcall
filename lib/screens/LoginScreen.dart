@@ -143,79 +143,78 @@ class _AuthCardState extends State<AuthCard> {
           //   ],
           // )
           TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Email',
+            decoration: InputDecoration(
+              labelText: 'Email',
+            ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              // set the validate rules for email
+              if (value.isEmpty || !value.contains('@')) {
+                return 'Email không chính xác!';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _authData['email'] = value;
+            },
+          ),
+          TextFormField(
+            keyboardType: TextInputType.text,
+            controller: _userPasswordController,
+            obscureText: _passwordSecure, //This will obscure text dynamically
+            validator: (value) {
+              if (value.isEmpty || value.length < 6) {
+                return 'Password is too short!';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _authData['password'] = value;
+            },
+            decoration: InputDecoration(
+              labelText: 'Password',
+              hintText: 'Enter your password',
+              // Here is key idea
+              suffixIcon: IconButton(
+                icon: Icon(
+                  // Based on passwordVisible state choose the icon
+                  _passwordSecure ? Icons.visibility_off : Icons.visibility,
+                  //  color: Theme.of(context).primaryColorDark,
+                  size: 20,
                 ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  // set the validate rules for email
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Email không chính xác!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['email'] = value;
+                onPressed: () {
+                  // Update the state i.e. toogle the state of passwordVisible variable
+                  setState(() {
+                    _passwordSecure = !_passwordSecure;
+                  });
                 },
               ),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: _userPasswordController,
-                obscureText:
-                    _passwordSecure, //This will obscure text dynamically
-                validator: (value) {
-                  if (value.isEmpty || value.length < 6) {
-                    return 'Password is too short!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['password'] = value;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  // Here is key idea
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      // Based on passwordVisible state choose the icon
-                      _passwordSecure ? Icons.visibility_off : Icons.visibility,
-                      //  color: Theme.of(context).primaryColorDark,
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      // Update the state i.e. toogle the state of passwordVisible variable
-                      setState(() {
-                        _passwordSecure = !_passwordSecure;
-                      });
-                    },
-                  ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          if (_isLoading)
+            CircularProgressIndicator()
+          else
+            ButtonTheme(
+              buttonColor: Pallete.primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              minWidth: 300.0,
+              height: 50.0,
+              child: RaisedButton(
+                onPressed: _submit,
+                child: Text(
+                  'ĐĂNG NHẬP',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              if (_isLoading)
-                 CircularProgressIndicator()
-              else
-                ButtonTheme(
-                  buttonColor: Pallete.primaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  minWidth: 300.0,
-                  height: 50.0,
-                  child: RaisedButton(
-                    onPressed: _submit,
-                    child: Text(
-                      'ĐĂNG NHẬP',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
-              FlatButton(
-                onPressed: () {},
-                child: Text('Quên mật khẩu?'),
-              )
+            ),
+          FlatButton(
+            onPressed: () {},
+            child: Text('Quên mật khẩu?'),
+          )
         ],
       ),
     );
