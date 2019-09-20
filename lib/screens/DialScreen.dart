@@ -49,7 +49,8 @@ class _DialScreenState extends State<DialScreen> {
   @override
   void initState() {
     textEditingController = MaskedTextController(
-        mask: widget.outputMask != null ? widget.outputMask : '+00-000-000-000');
+        mask:
+            widget.outputMask != null ? widget.outputMask : '+00-000-000-000');
     super.initState();
   }
 
@@ -114,7 +115,7 @@ class _DialScreenState extends State<DialScreen> {
                 readOnly: true,
                 style: TextStyle(color: Colors.black, fontSize: sizeFactor / 2),
                 textAlign: TextAlign.center,
-                decoration: InputDecoration(hintText: '+84-123-456-789'),
+                decoration: InputDecoration(hintText: ''),
                 controller: textEditingController,
               ),
             ),
@@ -239,38 +240,45 @@ class _DialButtonState extends State<DialButton>
             _animationController.reverse();
           } else {
             _animationController.forward();
-            _timer = Timer(const Duration(milliseconds: 200), () {
-              setState(() {
-                _animationController.reverse();
-              });
-            });
+            _timer = Timer(
+              const Duration(milliseconds: 200),
+              () {
+                setState(
+                  () {
+                    _animationController.reverse();
+                  },
+                );
+              },
+            );
           }
         }
       },
       child: ClipOval(
-          child: AnimatedBuilder(
-              animation: _colorTween,
-              builder: (context, child) => Container(
-                    color: _colorTween.value,
-                    height: sizeFactor,
-                    width: sizeFactor,
-                    child: Center(
-                        child: widget.icon == null
-                            ? Text(
-                                widget.title,
-                                style: TextStyle(
-                                    fontSize: sizeFactor /
-                                        2, // screenSize.height * 0.0862069,
-                                    color: widget.textColor != null
-                                        ? widget.textColor
-                                        : Colors.white),
-                              )
-                            : Icon(widget.icon,
-                                size: sizeFactor / 2,
-                                color: widget.iconColor != null
-                                    ? widget.iconColor
-                                    : Colors.white)),
-                  ))),
+        child: AnimatedBuilder(
+          animation: _colorTween,
+          builder: (context, child) => Container(
+            color: _colorTween.value,
+            height: sizeFactor,
+            width: sizeFactor,
+            child: Center(
+                child: widget.icon == null
+                    ? Text(
+                        widget.title,
+                        style: TextStyle(
+                            fontSize: sizeFactor /
+                                2, // screenSize.height * 0.0862069,
+                            color: widget.textColor != null
+                                ? widget.textColor
+                                : Colors.white),
+                      )
+                    : Icon(widget.icon,
+                        size: sizeFactor / 2,
+                        color: widget.iconColor != null
+                            ? widget.iconColor
+                            : Colors.white)),
+          ),
+        ),
+      ),
     );
   }
 }
