@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'CallHistoryScreen.dart';
 import 'ContactScreen.dart';
+import 'DialScreen.dart';
 
 import '../config/Pallete.dart' as Pallete;
 
@@ -21,9 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
   static List<Widget> _widgetOptions = <Widget>[
     CallHistoryScreen(),
     ContactScreen(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
+    DialScreen(
+      buttonColor: Colors.white,
+      buttonTextColor: Pallete.primaryColor,
+      backspaceButtonIconColor: Colors.red,
     ),
     Text(
       'Index 3: Reorder',
