@@ -23,9 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     CallHistoryScreen(),
     ContactScreen(),
     DialScreen(
-      buttonColor: Colors.white,
-      buttonTextColor: Pallete.primaryColor,
-      backspaceButtonIconColor: Colors.red,
     ),
     Text(
       'Index 3: Reorder',
