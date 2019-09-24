@@ -4,6 +4,7 @@ import '../config/Constants.dart';
 import '../config/Pallete.dart' as Pallete;
 
 import '../widgets/ContactWidget.dart';
+import '../widgets/LocalContactsWidget.dart';
 
 class ContactScreen extends StatelessWidget {
   static const routeName = './contact';
@@ -61,7 +62,7 @@ class ContactScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    ContactWidget(),
+                    LocalContactWidget(),
                     ContactWidget(),
                   ],
                 ),

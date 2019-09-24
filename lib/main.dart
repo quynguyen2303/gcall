@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/call_logs_provider.dart';
+import 'providers/contacts_provider.dart';
+import 'providers/local_contacts_provider.dart';
 
 import 'screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
@@ -28,7 +30,11 @@ class GCall extends StatelessWidget {
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProxyProvider<Auth, CallLogs>(
           builder: (context, auth, previousCallLogs) => CallLogs(auth.token),
-        )
+        ),
+        ChangeNotifierProxyProvider<Auth, Contacts>(
+          builder: (context, auth, previousContacts) => Contacts(auth.token),
+        ),
+        ChangeNotifierProvider.value(value: LocalContacts(),)
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(

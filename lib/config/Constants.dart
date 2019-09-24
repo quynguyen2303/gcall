@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'Pallete.dart' as Pallete;
+
+// API
+const kUrl = 'https://mobile-docker.gcall.vn/'; 
 
 // Icons
 const kPhoneIncoming = 'assets/icons/phone_incoming.png';

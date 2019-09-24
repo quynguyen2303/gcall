@@ -27,13 +27,13 @@ class ContactItem extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-                '$name',
-                style: kContactNameTextStyle,
-              ),
-          
+          Expanded(
+            child: Text(
+              '$name',
+              style: kContactNameTextStyle,
+            ),
+          ),
           Spacer(),
-         
         ],
       ),
     );

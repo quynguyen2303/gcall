@@ -64,6 +64,12 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     // final callLogs = Provider.of<CallLogs>(context);

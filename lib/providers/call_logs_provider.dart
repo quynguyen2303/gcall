@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import '../config/Constants.dart';
 
 enum CallStatus { outgoing, incoming, missed }
 
@@ -12,8 +13,7 @@ class CallLogs extends ChangeNotifier {
   List<CallLog> _missedCallLogs = [];
 
   var dio = Dio();
-
-  String url = 'https://mobile-docker.gcall.vn/calllogs';
+  final String url = kUrl + 'calllogs';
 
   CallLogs(this._token);
 
