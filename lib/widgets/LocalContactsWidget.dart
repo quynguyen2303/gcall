@@ -12,44 +12,14 @@ class LocalContactWidget extends StatefulWidget {
   _LocalContactWidgetState createState() => _LocalContactWidgetState();
 }
 
-class _LocalContactWidgetState extends State<LocalContactWidget> {
+class _LocalContactWidgetState extends State<LocalContactWidget> with AutomaticKeepAliveClientMixin {
   TextEditingController _editingController = TextEditingController();
 
   Future<void> _loadingContacts;
-  List<Contact> _allItems;
   List<Contact> _items;
 
-  // Quick Search
-  void filterSearchResults() {
-    var query = _editingController.text.toLowerCase();
-    List<Contact> dummySearchList = [];
-
-    
-    dummySearchList =
-        Provider.of<LocalContacts>(context, listen: false).contacts;
-
-    // dummySearchList
-    //     .where((contact) => contact.toLowerCase().contains(query.toLowerCase()))
-    //     .toList();
-
-    if (query.isNotEmpty) {
-      List<Contact> dummyListData = dummySearchList
-          .where((contact) =>
-              contact.displayName.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-
-      setState(() {
-        _items.clear();
-        _items.addAll(dummyListData);
-      });
-      return;
-    } else {
-      setState(() {
-        _items.clear();
-        _items.addAll(_allItems);
-      });
-    }
-  }
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -61,17 +31,14 @@ class _LocalContactWidgetState extends State<LocalContactWidget> {
   void initState() {
     _loadingContacts =
         Provider.of<LocalContacts>(context, listen: false).getPermission();
-
     _items = Provider.of<LocalContacts>(context, listen: false).contacts;
 
-    _editingController.addListener(filterSearchResults);
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: Column(
         children: <Widget>[

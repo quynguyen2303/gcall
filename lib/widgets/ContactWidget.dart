@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,42 +15,10 @@ class ContactWidget extends StatefulWidget {
 class _ContactWidgetState extends State<ContactWidget>
     with AutomaticKeepAliveClientMixin {
   int pageNumber = 1;
-  Future<void> _loadingContacts;
+  Timer timer;
 
   TextEditingController _editingController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-
-  // final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
-  // var items = List<String>();
-
-  // Local Search & Filter
-  // void filterSearchResults() {
-  //   var query = _editingController.text.toLowerCase();
-  //   List<String> dummySearchList = List<String>();
-  //   dummySearchList.addAll(duplicateItems);
-
-  //   // dummySearchList
-  //   //     .where((contact) => contact.toLowerCase().contains(query.toLowerCase()))
-  //   //     .toList();
-
-    // if (query.isNotEmpty) {
-  //     List<String> dummyListData = dummySearchList
-  //         .where(
-  //             (contact) => contact.toLowerCase().contains(query.toLowerCase()))
-  //         .toList();
-
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(dummyListData);
-  //     });
-  //     return;
-  //   } else {
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(duplicateItems);
-  //     });
-  //   }
-  // }
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -65,6 +35,31 @@ class _ContactWidgetState extends State<ContactWidget>
     }
   }
 
+  void fetchSearchContacts() {
+    final String query = _editingController.text;
+    if (query.isNotEmpty) {
+      Provider.of<Contacts>(context, listen: false).searchContacts(query);
+    }
+  }
+
+  void queryContacts() {
+    print(_editingController.text);
+    if (_editingController.text.isNotEmpty) {
+      print(_editingController.text == '');
+      if (timer != null) {
+        timer.cancel();
+        timer = null;
+      }
+      timer = Timer(Duration(seconds: 1), fetchSearchContacts);
+    } else {
+      print(_editingController.text == '');
+      Provider.of<Contacts>(context, listen: false).clearContacts();
+      pageNumber = 1;
+      Provider.of<Contacts>(context, listen: false)
+          .fetchAndSetUpContacts(pageNumber);
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -76,10 +71,9 @@ class _ContactWidgetState extends State<ContactWidget>
 
   @override
   void initState() {
-    _loadingContacts = Provider.of<Contacts>(context, listen: false)
-        .fetchAndSetUpContacts(pageNumber);
-    // items.addAll(duplicateItems);
-    // _editingController.addListener(filterSearchResults);
+    // _loadingContacts = Provider.of<Contacts>(context, listen: false)
+    //     .fetchAndSetUpContacts(pageNumber);
+    _editingController.addListener(queryContacts);
     _scrollController.addListener(_scrollListener);
     super.initState();
   }
@@ -104,7 +98,8 @@ class _ContactWidgetState extends State<ContactWidget>
           ),
           Expanded(
             child: FutureBuilder(
-              future: _loadingContacts,
+              future: Provider.of<Contacts>(context, listen: false)
+                  .fetchAndSetUpContacts(pageNumber),
               builder: (context, dataSnapshot) {
                 if (dataSnapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -121,7 +116,7 @@ class _ContactWidgetState extends State<ContactWidget>
                     return Consumer<Contacts>(
                       builder: (context, contactsData, child) =>
                           ListView.builder(
-                            controller: _scrollController,
+                        controller: _scrollController,
                         itemCount: contactsData.contacts.length,
                         itemBuilder: (context, index) => ContactItem(
                           name: contactsData.contacts[index].displayName,
