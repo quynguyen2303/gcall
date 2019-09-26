@@ -7,6 +7,7 @@ const kUrl = 'https://mobile-docker.gcall.vn/';
 // Icons
 const kPhoneIncoming = 'assets/icons/phone_incoming.png';
 const kPhoneButton = 'assets/icons/phone_button.png';
+const kBanner = 'assets/photos/banner.png';
 
 // Fonts and Text Styles
 const _primaryFontFamily = 'OpenSans';

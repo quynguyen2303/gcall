@@ -23,7 +23,7 @@ class _LocalContactWidgetState extends State<LocalContactWidget> with AutomaticK
 
   @override
   void dispose() {
-    _editingController.dispose();
+    // _editingController.dispose();
     super.dispose();
   }
 

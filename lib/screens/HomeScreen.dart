@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'CallHistoryScreen.dart';
 import 'ContactScreen.dart';
 import 'DialScreen.dart';
+import 'InformationScreen.dart';
 
 import '../config/Pallete.dart' as Pallete;
 
@@ -24,10 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ContactScreen(),
     DialScreen(
     ),
-    Text(
-      'Index 3: Reorder',
-      style: optionStyle,
-    ),
+    InformationScreen(),
   ];
 
   void _onItemTapped(int index) {
