@@ -7,23 +7,25 @@ import 'package:contacts_service/contacts_service.dart';
 import '../models/contact.dart' as Model;
 
 class LocalContacts extends ChangeNotifier {
+  Map<PermissionGroup, PermissionStatus> permissions;
+
   List<Model.Contact> _contacts = [];
 
   List<Model.Contact> get contacts {
     return _contacts;
   }
 
- 
+  void clearContacts() async {
+    _contacts.clear();   
+    notifyListeners();
+  }
 
-  Future<void> getPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions;
-
+  Future<void> fetchLocalContacts([String query = '']) async {
     permissions = await PermissionHandler()
         .requestPermissions([PermissionGroup.contacts]);
-
     if (permissions[PermissionGroup.contacts] == PermissionStatus.granted) {
       Iterable<Contact> contacts =
-          await ContactsService.getContacts(withThumbnails: false);
+          await ContactsService.getContacts(withThumbnails: false, query: query);
       contacts.forEach(
         (c) {
           final String firstName =
@@ -41,5 +43,6 @@ class LocalContacts extends ChangeNotifier {
         },
       );
     }
+    notifyListeners();
   }
 }

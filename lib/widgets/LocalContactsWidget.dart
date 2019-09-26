@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,26 +13,56 @@ class LocalContactWidget extends StatefulWidget {
   _LocalContactWidgetState createState() => _LocalContactWidgetState();
 }
 
-class _LocalContactWidgetState extends State<LocalContactWidget> with AutomaticKeepAliveClientMixin {
+class _LocalContactWidgetState extends State<LocalContactWidget>
+    with AutomaticKeepAliveClientMixin {
   TextEditingController _editingController = TextEditingController();
+  Timer timer;
 
-  Future<void> _loadingContacts;
   List<Contact> _items;
+
+  void fetchSearchContacts() async {
+    final String query = _editingController.text;
+    if (query.isNotEmpty) {
+      Provider.of<LocalContacts>(context, listen: false).clearContacts();
+      Provider.of<LocalContacts>(context, listen: false)
+          .fetchLocalContacts(query);
+      // _items = Provider.of<LocalContacts>(context, listen: false).contacts;
+    }
+  }
+
+  void queryContacts() async {
+    print(_editingController.text);
+    if (_editingController.text.isNotEmpty) {
+      print(_editingController.text == '');
+      if (timer != null) {
+        timer.cancel();
+        timer = null;
+      }
+      timer = Timer(Duration(seconds: 1), fetchSearchContacts);
+    } else {
+      print(_editingController.text == '');
+      Provider.of<LocalContacts>(context, listen: false).clearContacts();
+      // pageNumber = 1;
+      await Provider.of<LocalContacts>(context, listen: false).fetchLocalContacts();
+      // _items = Provider.of<LocalContacts>(context, listen: false).contacts;
+    }
+  }
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void dispose() {
-    // _editingController.dispose();
+    _editingController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _loadingContacts =
-        Provider.of<LocalContacts>(context, listen: false).getPermission();
-    _items = Provider.of<LocalContacts>(context, listen: false).contacts;
+    // _loadingContacts =
+    //     Provider.of<LocalContacts>(context, listen: false).getPermission();
+    // _items = Provider.of<LocalContacts>(context, listen: false).contacts;
+    _editingController.addListener(queryContacts);
 
     super.initState();
   }
@@ -55,8 +86,9 @@ class _LocalContactWidgetState extends State<LocalContactWidget> with AutomaticK
           ),
           Expanded(
             child: FutureBuilder(
-              future: _loadingContacts,
-              builder: (context, dataSnapshot)  {
+              future: Provider.of<LocalContacts>(context, listen: false)
+                  .fetchLocalContacts(),
+              builder: (context, dataSnapshot) {
                 if (dataSnapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
@@ -69,11 +101,13 @@ class _LocalContactWidgetState extends State<LocalContactWidget> with AutomaticK
                       child: Text('Got an error!'),
                     );
                   } else {
-                    return ListView.builder(
-                      itemCount: _items.length,
-                      itemBuilder: (context, index) => ContactItem(
-                        name: _items[index].displayName,
-                        initialLetter: _items[index].initials(),
+                    return Consumer<LocalContacts>(
+                      builder: (context, localContacts, _) => ListView.builder(
+                        itemCount: localContacts.contacts.length,
+                        itemBuilder: (context, index) => ContactItem(
+                          name: localContacts.contacts[index].displayName,
+                          initialLetter: localContacts.contacts[index].initials(),
+                        ),
                       ),
                     );
                   }
