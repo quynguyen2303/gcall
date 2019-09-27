@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../config/Constants.dart';
-import '../config/Pallete.dart' as Pallete;
+// import '../config/Pallete.dart' as Pallete;
 
 import '../providers/info_provider.dart';
 

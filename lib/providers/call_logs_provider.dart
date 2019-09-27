@@ -143,9 +143,7 @@ class CallLogs extends ChangeNotifier {
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
   }
 
-  Future<void> updatePageCallLogs(int pageNumber) async {
-    // TODO: find a way to refactor 4 tabs
-  }
+
 
   CallStatus checkCallLogStatus(String direction, String status) {
     // print(direction + status);

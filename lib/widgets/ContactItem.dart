@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../config/Pallete.dart' as Pallete;
+// import '../config/Pallete.dart' as Pallete;
 import '../config/Constants.dart';
 
 class ContactItem extends StatelessWidget {

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'ContactItem.dart';
 
-import '../models/contact.dart';
+// import '../models/contact.dart';
 
 import '../providers/local_contacts_provider.dart';
 
@@ -18,7 +18,7 @@ class _LocalContactWidgetState extends State<LocalContactWidget>
   TextEditingController _editingController = TextEditingController();
   Timer timer;
 
-  List<Contact> _items;
+  // List<Contact> _items;
 
   void fetchSearchContacts() async {
     final String query = _editingController.text;
