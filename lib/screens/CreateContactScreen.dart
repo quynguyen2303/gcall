@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../config/Constants.dart';
 
+import '../models/contact.dart';
+
 enum ContactSex { nam, nu, khac }
+
 
 class CreateContactScreen extends StatefulWidget {
   static const routeName = './create_contact';
@@ -11,12 +14,58 @@ class CreateContactScreen extends StatefulWidget {
 }
 
 class _CreateContactScreenState extends State<CreateContactScreen> {
-  ContactSex _contaxtSex = ContactSex.nu;
+  ContactSex _contactSex = ContactSex.nu;
+  bool _isLoading = false;
   final _form = GlobalKey<FormState>();
+
+  final _lastnameFocusNode = FocusNode();
+  final _phoneFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+
+  Contact _newContact = Contact(
+      id: DateTime.now().toString(),
+      lastName: '',
+      firstName: '',
+      phone: '',
+      email: '');
+
+  void _saveForm() async {
+    bool _isValid = _form.currentState.validate();
+
+    if (!_isValid) {
+      return;
+    }
+
+    // Save all form values to new contact
+    _form.currentState.save();
+
+    // Set the gender for the contact
+    if (_contactSex == ContactSex.nam) {
+    _newContact.setGender('Nam');
+    } else if (_contactSex == ContactSex.nu) {
+      _newContact.setGender('Nữ');
+    } else {
+      _newContact.setGender('Khác');
+    }
+
+    // Set the circulation progress
+    setState(() {
+      _isLoading = true;
+    });
+
+    // print(_newContact);
+  }
+
+  @override
+  void dispose() {
+    _lastnameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _emailFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -25,149 +74,182 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
         ),
         actions: <Widget>[
           FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('XONG', style: TextStyle(color: Colors.white),),
+            onPressed: _saveForm,
+            child: Text(
+              'XONG',
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
-        child: Form(
-          key: _form,
-          child: SingleChildScrollView(
-              child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Tên*',
-                ),
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) {
-                  // TODO: when submit this text field
-                },
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Hãy nhập tên cho liên hệ.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  // TODO : when save the whole form
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Họ',
-                ),
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) {
-                  // TODO: when submit this text field
-                },
-                // validator: (value) {
-                //   if (value.isEmpty) {
-                //     return null;
-                //   }
-                //   return null;
-                // },
-                onSaved: (value) {
-                  // TODO : when save the whole form
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Số điện thoại*',
-                ),
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) {
-                  // TODO: when submit this text field
-                },
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Hãy nhập số điện thoại cho liên hệ.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  // TODO : when save the whole form
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                ),
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) {
-                  // TODO: when submit this text field
-                },
-                // validator: (value) {
-                //   if (value.isEmpty) {
-                //     return null;
-                //   }
-                //   return null;
-                // },
-                onSaved: (value) {
-                  // TODO : when save the whole form
-                },
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+              child: Form(
+                key: _form,
+                child: SingleChildScrollView(
+                    child: Column(
                   children: <Widget>[
-                    Text(
-                      'Giới tính',
-                      style: TextStyle(fontSize: 14.0),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Tên*',
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_lastnameFocusNode);
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Hãy nhập tên cho liên hệ.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _newContact = Contact(
+                          firstName: value,
+                          id: _newContact.id,
+                          lastName: _newContact.lastName,
+                          phone: _newContact.phone,
+                          email: _newContact.email,
+                        );
+                      },
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        LabeledRadio(
-                          label: 'Nữ',
-                          padding: EdgeInsets.all(0),
-                          groupValue: _contaxtSex,
-                          value: ContactSex.nu,
-                          onChanged: (ContactSex newValue) {
-                            setState(() {
-                              _contaxtSex = newValue;
-                            });
-                          },
-
-                        ),LabeledRadio(
-                          label: 'Nam',
-                          padding: EdgeInsets.all(0),
-                          groupValue: _contaxtSex,
-                          value: ContactSex.nam,
-                          onChanged: (ContactSex newValue) {
-                            setState(() {
-                              _contaxtSex = newValue;
-                            });
-                          },
-
-                        ),LabeledRadio(
-                          label: 'Khác',
-                          padding: EdgeInsets.all(0),
-                          groupValue: _contaxtSex,
-                          value: ContactSex.khac,
-                          onChanged: (ContactSex newValue) {
-                            setState(() {
-                              _contaxtSex = newValue;
-                            });
-                          },
-
-                        ),
-                      ],
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Họ',
+                      ),
+                      textInputAction: TextInputAction.next,
+                      focusNode: _lastnameFocusNode,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_phoneFocusNode);
+                      },
+                      // validator: (value) {
+                      //   if (value.isEmpty) {
+                      //     return null;
+                      //   }
+                      //   return null;
+                      // },
+                      onSaved: (value) {
+                        _newContact = Contact(
+                          firstName: _newContact.firstName,
+                          id: _newContact.id,
+                          lastName: value ?? '',
+                          phone: _newContact.phone,
+                          email: _newContact.email,
+                        );
+                      },
                     ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Số điện thoại*',
+                      ),
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _phoneFocusNode,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_emailFocusNode);
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Hãy nhập số điện thoại cho liên hệ.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _newContact = Contact(
+                          firstName: _newContact.firstName,
+                          id: _newContact.id,
+                          lastName: _newContact.lastName,
+                          phone: value,
+                          email: _newContact.email,
+                        );
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.done,
+                      focusNode: _emailFocusNode,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
+                      // validator: (value) {
+                      //   if (value.isEmpty) {
+                      //     return null;
+                      //   }
+                      //   return null;
+                      // },
+                      onSaved: (value) {
+                        _newContact = Contact(
+                          firstName: _newContact.firstName,
+                          id: _newContact.id,
+                          lastName: _newContact.lastName,
+                          phone: _newContact.phone,
+                          email: value ?? '',
+                        );
+                      },
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Giới tính',
+                            style: TextStyle(fontSize: 14.0),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              LabeledRadio(
+                                label: 'Nữ',
+                                padding: EdgeInsets.all(0),
+                                groupValue: _contactSex,
+                                value: ContactSex.nu,
+                                onChanged: (ContactSex newValue) {
+                                  setState(() {
+                                    _contactSex = newValue;
+                                   
+                                  });
+                                },
+                              ),
+                              LabeledRadio(
+                                label: 'Nam',
+                                padding: EdgeInsets.all(0),
+                                groupValue: _contactSex,
+                                value: ContactSex.nam,
+                                onChanged: (ContactSex newValue) {
+                                  setState(() {
+                                    _contactSex = newValue;
+                                
+                                  });
+                                },
+                              ),
+                              LabeledRadio(
+                                label: 'Khác',
+                                padding: EdgeInsets.all(0),
+                                groupValue: _contactSex,
+                                value: ContactSex.khac,
+                                onChanged: (ContactSex newValue) {
+                                  setState(() {
+                                    _contactSex = newValue;
+                                
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ],
-                ),
-              )
-            ],
-          )),
-        ),
-      ),
+                )),
+              ),
+            ),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'Pallete.dart' as Pallete;
 // API
 const kUrl = 'https://mobile-docker.gcall.vn/'; 
 
+enum ContactSex { nam, nu, khac }
+
 // Icons
 const kPhoneIncoming = 'assets/icons/phone_incoming.png';
 const kPhoneButton = 'assets/icons/phone_button.png';
