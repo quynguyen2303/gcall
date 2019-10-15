@@ -6,6 +6,8 @@ import '../config/Pallete.dart' as Pallete;
 import '../widgets/ContactWidget.dart';
 import '../widgets/LocalContactsWidget.dart';
 
+import 'CreateContactScreen.dart';
+
 class ContactScreen extends StatelessWidget {
   static const routeName = './contact';
 
@@ -25,7 +27,9 @@ class ContactScreen extends StatelessWidget {
               Icons.add,
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, CreateContactScreen.routeName);
+            },
           )
         ],
       ),

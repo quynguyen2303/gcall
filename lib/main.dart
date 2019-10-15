@@ -14,6 +14,7 @@ import 'screens/CallHistoryScreen.dart';
 import 'screens/SplashScreen.dart';
 import 'screens/ContactScreen.dart';
 import 'screens/InformationScreen.dart';
+import 'screens/CreateContactScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -65,6 +66,7 @@ class GCall extends StatelessWidget {
             CallHistoryScreen.routeName: (context) => CallHistoryScreen(),
             ContactScreen.routeName: (context) => ContactScreen(),
             InformationScreen.routeName: (context) => InformationScreen(),
+            CreateContactScreen.routeName: (context) => CreateContactScreen(),
           },
         ),
       ),
