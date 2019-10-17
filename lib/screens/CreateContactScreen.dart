@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:flushbar/flushbar.dart';
+
 import '../config/Constants.dart';
+import '../config/Pallete.dart' as Pallete;
 
 import '../models/contact.dart';
 
@@ -70,6 +73,23 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
       _isLoading = false;
       Navigator.pop(context);
     });
+
+    print('flush bar starts');
+
+    Flushbar(
+      // title: "Hey Ninja",
+      icon: Icon(Icons.info, color: Pallete.primaryColor,),
+      message:
+          "Bạn đã tạo một liên hệ",
+      duration: Duration(seconds: 2),
+      // mainButton: FlatButton(
+      //   color: Colors.white,
+      //   child: Text('Xóa'),
+      //   onPressed: () {
+      //     // TODO: remove the contact
+      //   },
+      // ),
+    )..show(context);
 
     // print(_newContact);
   }
