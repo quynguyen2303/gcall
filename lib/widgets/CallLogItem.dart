@@ -41,7 +41,7 @@ class CallLogItem extends StatelessWidget {
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.only(right: 10),
@@ -56,7 +56,7 @@ class CallLogItem extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          // Spacer(),
           IconButton(
             icon: ImageIcon(
               AssetImage(kPhoneButton),
