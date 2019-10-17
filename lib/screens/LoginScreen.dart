@@ -68,6 +68,8 @@ class _AuthCardState extends State<AuthCard> {
   GlobalKey<FormState> _formKey = GlobalKey();
   final _userPasswordController = TextEditingController();
 
+  final _passwordFocusNode = FocusNode();
+
   bool _passwordSecure;
   bool _isLoading;
 
@@ -123,6 +125,11 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+  @override
   void initState() {
     _passwordSecure = true;
     _isLoading = false;
@@ -147,6 +154,10 @@ class _AuthCardState extends State<AuthCard> {
               labelText: 'Email',
             ),
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_passwordFocusNode);
+            },
             validator: (value) {
               // set the validate rules for email
               if (value.isEmpty || !value.contains('@')) {
@@ -159,9 +170,13 @@ class _AuthCardState extends State<AuthCard> {
             },
           ),
           TextFormField(
+            focusNode: _passwordFocusNode,
             keyboardType: TextInputType.text,
             controller: _userPasswordController,
             obscureText: _passwordSecure, //This will obscure text dynamically
+            onFieldSubmitted: (_) {
+              _submit();
+            },
             validator: (value) {
               if (value.isEmpty || value.length < 6) {
                 return 'Password is too short!';
