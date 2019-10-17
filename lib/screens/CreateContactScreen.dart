@@ -50,8 +50,7 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
     } else if (_contactSex == ContactSex.nu) {
       _newContact.setGender('female');
     } else {
-      // TODO: check options
-      _newContact.setGender('none');
+      _newContact.setGender('unknown');
     }
 
     // Set the circulation progress on

@@ -7,6 +7,8 @@ import 'ContactItem.dart';
 
 import '../providers/contacts_provider.dart';
 
+/// A Widget contains a list of contact item
+
 class ContactWidget extends StatefulWidget {
   @override
   _ContactWidgetState createState() => _ContactWidgetState();
@@ -119,6 +121,7 @@ class _ContactWidgetState extends State<ContactWidget>
                         controller: _scrollController,
                         itemCount: contactsData.contacts.length,
                         itemBuilder: (context, index) => ContactItem(
+                          id: contactsData.contacts[index].id,
                           name: contactsData.contacts[index].displayName,
                           initialLetter:
                               contactsData.contacts[index].initials(),

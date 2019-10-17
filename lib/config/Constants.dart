@@ -10,6 +10,8 @@ enum ContactSex { nam, nu, khac }
 const kPhoneIncoming = 'assets/icons/phone_incoming.png';
 const kPhoneButton = 'assets/icons/phone_button.png';
 const kBanner = 'assets/photos/banner.png';
+const kNoteAdd = 'assets/icons/note_add.png';
+const kAlarm = 'assets/icons/alarm.png';
 
 // Fonts and Text Styles
 const _primaryFontFamily = 'OpenSans';

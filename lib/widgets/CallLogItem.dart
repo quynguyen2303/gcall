@@ -30,29 +30,31 @@ class CallLogItem extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                '$name',
-                style: kContactCallHistoryTextStyle,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: 10),
-                    child: checkStatusIcon(status),
-                  ),
-                  Text(
-                    '$date lúc $time',
-                    style: kTimeCallHistoryTextStyle,
-                  ),
-                ],
-              ),
-            ],
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  '$name',
+                  style: kContactCallHistoryTextStyle,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(right: 10),
+                      child: checkStatusIcon(status),
+                    ),
+                    Text(
+                      '$date lúc $time',
+                      style: kTimeCallHistoryTextStyle,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           Spacer(),
           IconButton(

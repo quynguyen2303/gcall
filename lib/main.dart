@@ -15,6 +15,7 @@ import 'screens/SplashScreen.dart';
 import 'screens/ContactScreen.dart';
 import 'screens/InformationScreen.dart';
 import 'screens/CreateContactScreen.dart';
+import 'screens/ContactDetailScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -67,6 +68,7 @@ class GCall extends StatelessWidget {
             ContactScreen.routeName: (context) => ContactScreen(),
             InformationScreen.routeName: (context) => InformationScreen(),
             CreateContactScreen.routeName: (context) => CreateContactScreen(),
+            ContactDetailScreen.routeName: (context) => ContactDetailScreen(),
           },
         ),
       ),
