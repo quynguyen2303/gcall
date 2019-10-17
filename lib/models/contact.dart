@@ -23,7 +23,7 @@ class Contact {
   }
 
   void setGender(String value) {
-    gender = value;
+    this.gender = value;
   }
 
   @override

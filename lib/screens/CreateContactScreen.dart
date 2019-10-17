@@ -4,8 +4,10 @@ import '../config/Constants.dart';
 
 import '../models/contact.dart';
 
-enum ContactSex { nam, nu, khac }
+import 'package:provider/provider.dart';
+import '../providers/contacts_provider.dart';
 
+enum ContactSex { nam, nu, khac }
 
 class CreateContactScreen extends StatefulWidget {
   static const routeName = './create_contact';
@@ -41,16 +43,32 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
 
     // Set the gender for the contact
     if (_contactSex == ContactSex.nam) {
-    _newContact.setGender('Nam');
+      _newContact.setGender('male');
     } else if (_contactSex == ContactSex.nu) {
-      _newContact.setGender('Nữ');
+      _newContact.setGender('female');
     } else {
-      _newContact.setGender('Khác');
+      // TODO: check options
+      _newContact.setGender('none');
     }
 
-    // Set the circulation progress
+    // Set the circulation progress on
     setState(() {
       _isLoading = true;
+    });
+
+    print(_newContact.gender);
+
+    await Provider.of<Contacts>(context).createContact(
+        _newContact.firstName,
+        _newContact.lastName,
+        _newContact.gender,
+        _newContact.phone,
+        _newContact.email);
+
+    // Set the circulation progress off
+    setState(() {
+      _isLoading = false;
+      Navigator.pop(context);
     });
 
     // print(_newContact);
@@ -213,7 +231,6 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                                 onChanged: (ContactSex newValue) {
                                   setState(() {
                                     _contactSex = newValue;
-                                   
                                   });
                                 },
                               ),
@@ -225,7 +242,6 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                                 onChanged: (ContactSex newValue) {
                                   setState(() {
                                     _contactSex = newValue;
-                                
                                   });
                                 },
                               ),
@@ -237,7 +253,6 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                                 onChanged: (ContactSex newValue) {
                                   setState(() {
                                     _contactSex = newValue;
-                                
                                   });
                                 },
                               ),
