@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gcall/widgets/ContactItem.dart';
+import 'package:provider/provider.dart';
 
 import '../config/Constants.dart';
 
 import '../widgets/ContactActivityWidget.dart';
-import '../widgets/ContactDetailBodyWidget.dart';
-import '../widgets/ContactDetailHeaderWidget.dart';
+import '../widgets/ContactDetailWidget.dart';
+
+import '../providers/contacts_provider.dart';
 
 class ContactDetailScreen extends StatelessWidget {
   static const routeName = './contact_detail';
@@ -13,6 +15,8 @@ class ContactDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ContactItem args = ModalRoute.of(context).settings.arguments;
+
+    Provider.of<Contacts>(context, listen: false).getOneContact(args.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,9 +37,8 @@ class ContactDetailScreen extends StatelessWidget {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
-            ContactDetailHeaderWidget(id : args.id),
-            ContactDetailBodyWidget(),
-            ContactActivityWidget(),
+            Flexible(flex: 1, child: ContactDetailWidget(id: args.id)),
+            Flexible(flex: 1, child: ContactActivityWidget()),
           ],
         ),
       ),

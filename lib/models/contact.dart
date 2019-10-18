@@ -1,4 +1,3 @@
-import '../config/Constants.dart';
 
 class Contact {
   final String id;

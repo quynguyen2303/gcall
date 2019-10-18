@@ -8,6 +8,8 @@ import '../models/contact.dart';
 class Contacts extends ChangeNotifier {
   final String _token;
   List<Contact> _contacts = [];
+  Contact contact;
+  bool _isSetInterceptor = false;
 
   Contacts(this._token);
 
@@ -23,6 +25,7 @@ class Contacts extends ChangeNotifier {
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       options.headers['x-sessiontoken'] = _token;
     }));
+    _isSetInterceptor = true;
   }
 
   Future<void> searchContacts(String query) async {
@@ -70,7 +73,9 @@ class Contacts extends ChangeNotifier {
 
   Future<void> fetchAndSetUpContacts(int pageNumber) async {
     print('Fetching...');
-    setUpDioWithHeader();
+    if (!_isSetInterceptor) {
+      setUpDioWithHeader();
+    }
 
     try {
       Response response = await dio.get(
@@ -115,7 +120,9 @@ class Contacts extends ChangeNotifier {
 
   Future<void> createContact(String firstName, String lastName, String gender,
       String phone, String email) async {
-    setUpDioWithHeader();
+    if (!_isSetInterceptor) {
+      setUpDioWithHeader();
+    }
     const String createContactUrl = kUrl + 'contact';
 
     try {
@@ -132,6 +139,43 @@ class Contacts extends ChangeNotifier {
       );
 
       print(response.data['success']);
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print('error data:');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print('error without data:');
+        print(e.request);
+        print(e.message);
+      }
+      throw (e);
+    }
+  }
+
+  Future<void> getOneContact(String contactId) async {
+    print('Getting contact info');
+
+    final String getOneContactUrl = kUrl + 'contact/$contactId';
+
+    try {
+      Response response = await dio.get(getOneContactUrl);
+      contact = Contact(
+        id: response.data['result']['_id'],
+        firstName: response.data['result']['firstName'],
+        lastName: response.data['result']['lastName'],
+        phone: response.data['result']['phone'],
+        email: response.data['result']['email'],
+        gender: response.data['result']['gender'],
+      );
+
+      print('API finished');
+      print(response.data['result']);
+      print(contact.toString());
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
