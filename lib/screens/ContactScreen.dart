@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../config/Constants.dart';
 import '../config/Pallete.dart' as Pallete;
 
-import '../widgets/ContactWidget.dart';
+import '../widgets/ContactsWidget.dart';
 import '../widgets/LocalContactsWidget.dart';
 
 import 'CreateContactScreen.dart';

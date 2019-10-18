@@ -112,6 +112,7 @@ class _ContactWidgetState extends State<ContactWidget>
                     // Hanlding the error
                     print(dataSnapshot.error);
                     return Center(
+                      // TODO: change to more explanable test
                       child: Text('Got an error!'),
                     );
                   } else {
@@ -124,7 +125,7 @@ class _ContactWidgetState extends State<ContactWidget>
                           id: contactsData.contacts[index].id,
                           name: contactsData.contacts[index].displayName,
                           initialLetter:
-                              contactsData.contacts[index].initials(),
+                              contactsData.contacts[index].initials,
                         ),
                       ),
                     );

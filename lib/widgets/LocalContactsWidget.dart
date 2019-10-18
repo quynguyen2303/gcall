@@ -107,7 +107,7 @@ class _LocalContactWidgetState extends State<LocalContactWidget>
                         itemBuilder: (context, index) => ContactItem(
                           id: '', // TODO: fix this
                           name: localContacts.contacts[index].displayName,
-                          initialLetter: localContacts.contacts[index].initials(),
+                          initialLetter: localContacts.contacts[index].initials,
                         ),
                       ),
                     );

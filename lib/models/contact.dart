@@ -15,12 +15,31 @@ class Contact {
         (this.lastName?.isNotEmpty == true ? this.lastName : ""));
   }
 
-  String initials() {
+  String get initials {
     return ((this.firstName?.isNotEmpty == true ? this.firstName[0] : "") +
             (this.lastName?.isNotEmpty == true ? this.lastName[0] : ""))
         .toUpperCase();
   }
 
+  // String get emailInfo {
+  //   return email;
+  // }
+
+  // String get phoneInfo {
+  //   return phone; {}
+  // }
+
+  String get genderInfo {
+    if (gender == 'male') {
+      return 'Nam';
+    } else {
+      if (gender == 'female') {
+        return 'Nữ';
+      } else {
+        return 'Khác';
+      }
+    }
+  }
   void setGender(String value) {
     this.gender = value;
   }

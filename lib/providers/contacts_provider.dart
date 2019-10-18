@@ -8,13 +8,17 @@ import '../models/contact.dart';
 class Contacts extends ChangeNotifier {
   final String _token;
   List<Contact> _contacts = [];
-  Contact contact;
+  Contact _contact;
   bool _isSetInterceptor = false;
 
   Contacts(this._token);
 
   var dio = Dio();
   final String url = kUrl + 'contacts';
+
+  Contact get contactInfo {
+    return _contact;
+  }
 
   List<Contact> get contacts {
     return _contacts;
@@ -164,7 +168,7 @@ class Contacts extends ChangeNotifier {
 
     try {
       Response response = await dio.get(getOneContactUrl);
-      contact = Contact(
+      _contact = Contact(
         id: response.data['result']['_id'],
         firstName: response.data['result']['firstName'],
         lastName: response.data['result']['lastName'],
@@ -175,7 +179,7 @@ class Contacts extends ChangeNotifier {
 
       print('API finished');
       print(response.data['result']);
-      print(contact.toString());
+      print(_contact.toString());
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
