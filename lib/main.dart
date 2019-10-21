@@ -12,10 +12,11 @@ import 'screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
 import 'screens/CallHistoryScreen.dart';
 import 'screens/SplashScreen.dart';
-import 'screens/ContactScreen.dart';
+import 'screens/ContactsScreen.dart';
 import 'screens/InformationScreen.dart';
 import 'screens/CreateContactScreen.dart';
 import 'screens/ContactDetailScreen.dart';
+import 'screens/UpdateContactScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -65,10 +66,20 @@ class GCall extends StatelessWidget {
             LoginScreen.routeName: (context) => LoginScreen(),
             HomeScreen.routeName: (context) => HomeScreen(),
             CallHistoryScreen.routeName: (context) => CallHistoryScreen(),
-            ContactScreen.routeName: (context) => ContactScreen(),
+            ContactsScreen.routeName: (context) => ContactsScreen(),
             InformationScreen.routeName: (context) => InformationScreen(),
             CreateContactScreen.routeName: (context) => CreateContactScreen(),
             ContactDetailScreen.routeName: (context) => ContactDetailScreen(),
+            // UpdateContactScreen.routeName: (context) => UpdateContactScreen(),
+          },
+          onGenerateRoute: (settings) {
+            // If push to UpdateContactScree
+            if (settings.name == UpdateContactScreen.routeName) {
+              final ContactDetailScreen args = settings.arguments;
+              return MaterialPageRoute(builder: (context) {
+                return UpdateContactScreen(id: args.id);
+              });
+            }
           },
         ),
       ),

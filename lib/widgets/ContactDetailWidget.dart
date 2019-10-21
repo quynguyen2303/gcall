@@ -6,17 +6,30 @@ import '../config/Pallete.dart' as Pallete;
 
 import '../providers/contacts_provider.dart';
 
-class ContactDetailWidget extends StatelessWidget {
+class ContactDetailWidget extends StatefulWidget {
   final String id;
 
   ContactDetailWidget({this.id});
 
   @override
+  _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
+}
+
+class _ContactDetailWidgetState extends State<ContactDetailWidget> {
+  Future<void> _loadingContacts;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadingContacts =
+        Provider.of<Contacts>(context, listen: false).getOneContact(widget.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(id);
 
     return FutureBuilder(
-        future: Provider.of<Contacts>(context, listen: false).getOneContact(id),
+        future: _loadingContacts,
         builder: (context, dataSnapshot) {
           if (dataSnapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -120,7 +133,9 @@ class ContactDetailWidget extends StatelessWidget {
                                         color: Colors.black),
                                     children: [
                                   TextSpan(
-                                    text: contactData.contactInfo.email.isEmpty ? 'Không có' : contactData.contactInfo.email,
+                                    text: contactData.contactInfo.email.isEmpty
+                                        ? 'Không có'
+                                        : contactData.contactInfo.email,
                                     style: DefaultTextStyle.of(context).style,
                                   )
                                 ])),

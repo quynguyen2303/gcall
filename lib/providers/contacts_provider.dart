@@ -1,4 +1,6 @@
+
 import 'package:flutter/foundation.dart';
+
 import 'package:dio/dio.dart';
 
 import '../config/Constants.dart';
@@ -120,7 +122,6 @@ class Contacts extends ChangeNotifier {
       // Set the init to false and previousPage to current page
       _isInit = false;
       _previousPage = pageNumber;
-
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -201,7 +202,50 @@ class Contacts extends ChangeNotifier {
       print('API finished');
       print(response.data['result']);
       print(_contact.toString());
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print('error data:');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print('error without data:');
+        print(e.request);
+        print(e.message);
+      }
+      throw (e);
+    }
+  }
 
+  Future<void> updateContact(String id, String firstName, String lastName,
+      String gender, String email) async {
+    print('Updating a contact...');
+
+    if (!_isSetInterceptor) {
+      setUpDioWithHeader();
+    }
+
+    final String updateContactUrl = kUrl + 'contact/$id';
+
+    try {
+      print('Update Contact API starts...');
+      print('The contact id is $is, with info: $firstName , $lastName');
+      Response response = await dio.put(
+        updateContactUrl,
+        data: {
+          "firstName": firstName,
+          "lastName": lastName,
+          "gender": gender,
+          "email": email,
+          "avatar": '',
+        },
+      );
+
+      print(response.data['success']);
+      print('Update Contact API finished');
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.

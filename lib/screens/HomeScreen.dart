@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'CallHistoryScreen.dart';
-import 'ContactScreen.dart';
+import 'ContactsScreen.dart';
 import 'DialScreen.dart';
 import 'InformationScreen.dart';
 
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static List<Widget> _widgetOptions = <Widget>[
     CallHistoryScreen(),
-    ContactScreen(),
+    ContactsScreen(),
     DialScreen(
     ),
     InformationScreen(),

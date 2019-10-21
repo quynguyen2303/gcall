@@ -9,12 +9,12 @@ import '../providers/contacts_provider.dart';
 
 /// A Widget contains a list of contact item
 
-class ContactWidget extends StatefulWidget {
+class ContactsWidget extends StatefulWidget {
   @override
-  _ContactWidgetState createState() => _ContactWidgetState();
+  _ContactsWidgetState createState() => _ContactsWidgetState();
 }
 
-class _ContactWidgetState extends State<ContactWidget>
+class _ContactsWidgetState extends State<ContactsWidget>
     with AutomaticKeepAliveClientMixin {
   int pageNumber = 1;
   Timer timer;

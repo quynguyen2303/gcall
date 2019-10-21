@@ -8,7 +8,7 @@ import '../widgets/LocalContactsWidget.dart';
 
 import 'CreateContactScreen.dart';
 
-class ContactScreen extends StatelessWidget {
+class ContactsScreen extends StatelessWidget {
   static const routeName = './contact';
 
   @override
@@ -66,7 +66,7 @@ class ContactScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    ContactWidget(),
+                    ContactsWidget(),
                     LocalContactWidget(),
                   ],
                 ),

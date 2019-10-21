@@ -77,20 +77,13 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
 
     Flushbar(
       // title: "Hey Ninja",
-      icon: Icon(Icons.info, color: Pallete.primaryColor,),
-      message:
-          "Bạn đã tạo một liên hệ",
+      icon: Icon(
+        Icons.info,
+        color: Pallete.primaryColor,
+      ),
+      message: "Bạn đã tạo một liên hệ",
       duration: Duration(seconds: 2),
-      // mainButton: FlatButton(
-      //   color: Colors.white,
-      //   child: Text('Xóa'),
-      //   onPressed: () {
-      //     // TODO: remove the contact
-      //   },
-      // ),
     )..show(context);
-
-    // print(_newContact);
   }
 
   @override
