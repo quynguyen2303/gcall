@@ -27,12 +27,12 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      setState(() {
+      // setState(() {
         // _isLoading = true;
         pageNumber += 1;
-        Provider.of<CallLogs>(context, listen: false)
-            .fetchAndSetCallLogs(pageNumber, filter);
-      });
+      // });
+      Provider.of<CallLogs>(context, listen: false)
+          .fetchAndSetCallLogs(pageNumber, filter);
 
       // print('Loaded');
       // setState(() {

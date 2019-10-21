@@ -22,18 +22,22 @@ class _ContactWidgetState extends State<ContactWidget>
   TextEditingController _editingController = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
+  Future<void> _loadingContacts;
+
   void _scrollListener() {
+    // print('Scorll start...');
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      setState(
-        () {
+        !_scrollController.position.outOfRange && _editingController.text.isEmpty) {
+      // setState(
+      //   () {
           // _isLoading = true;
           pageNumber += 1;
-          Provider.of<Contacts>(context, listen: false)
-              .fetchAndSetUpContacts(pageNumber);
-        },
-      );
+      //   },
+      // );
+
+      Provider.of<Contacts>(context, listen: false)
+          .fetchAndSetUpContacts(pageNumber);
     }
   }
 
@@ -68,6 +72,7 @@ class _ContactWidgetState extends State<ContactWidget>
   @override
   void dispose() {
     _editingController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -77,12 +82,15 @@ class _ContactWidgetState extends State<ContactWidget>
     //     .fetchAndSetUpContacts(pageNumber);
     _editingController.addListener(queryContacts);
     _scrollController.addListener(_scrollListener);
+
+    _loadingContacts = Provider.of<Contacts>(context, listen: false).fetchAndSetUpContacts(pageNumber);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    print(pageNumber);
 
     return Container(
       child: Column(
@@ -100,8 +108,7 @@ class _ContactWidgetState extends State<ContactWidget>
           ),
           Expanded(
             child: FutureBuilder(
-              future: Provider.of<Contacts>(context, listen: false)
-                  .fetchAndSetUpContacts(pageNumber),
+              future: _loadingContacts,
               builder: (context, dataSnapshot) {
                 if (dataSnapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -124,8 +131,7 @@ class _ContactWidgetState extends State<ContactWidget>
                         itemBuilder: (context, index) => ContactItem(
                           id: contactsData.contacts[index].id,
                           name: contactsData.contacts[index].displayName,
-                          initialLetter:
-                              contactsData.contacts[index].initials,
+                          initialLetter: contactsData.contacts[index].initials,
                         ),
                       ),
                     );

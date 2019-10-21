@@ -7,6 +7,7 @@ enum CallStatus { outgoing, incoming, missed }
 class CallLogs extends ChangeNotifier {
   final String _token;
   String stringFilter;
+  bool _isSetInterceptor = false;
   List<CallLog> _allCallLogs = [];
   List<CallLog> _incomingCallLogs = [];
   List<CallLog> _outgoingCallLogs = [];
@@ -53,6 +54,7 @@ class CallLogs extends ChangeNotifier {
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       options.headers['x-sessiontoken'] = _token;
     }));
+    _isSetInterceptor = true;
   }
 
   void setFilter(String filter) {
@@ -78,7 +80,9 @@ class CallLogs extends ChangeNotifier {
     // print(filter);
     setFilter(filter);
     // Set up header with _token
-    setUpDioWithHeader();
+    if (!_isSetInterceptor) {
+      setUpDioWithHeader();
+    }
     // print('Page number in provider is $pageNumber');
 
     try {
@@ -86,7 +90,7 @@ class CallLogs extends ChangeNotifier {
         'page': pageNumber,
         'filter': stringFilter,
       });
-      // print(response.data['result']);
+      print(response.data['result'].length);
       response.data['result'].forEach((e) {
         final firstName = e['contact']['firstName'];
         final lastName = e['contact']['lastName'];
@@ -113,7 +117,7 @@ class CallLogs extends ChangeNotifier {
         }
       });
 
-      // print(_callLogs.length);
+      print(_allCallLogs.length);
       // for (var i = 0; i < _callLogs.length; i++) {
       //   print(_callLogs[i]);
       // }
@@ -142,8 +146,6 @@ class CallLogs extends ChangeNotifier {
     // print(callLogs[1]['_id']+ " & contact id: " + callLogs[1]['contact']['_id']);
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
   }
-
-
 
   CallStatus checkCallLogStatus(String direction, String status) {
     // print(direction + status);

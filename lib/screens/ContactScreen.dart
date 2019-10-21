@@ -58,16 +58,16 @@ class ContactScreen extends StatelessWidget {
 
                   // labelPadding: EdgeInsets.symmetric(horizontal: 20),
                   tabs: <Widget>[
-                    Tab(child: Text('Cá Nhân')),
                     Tab(child: Text('Hệ thống')),
+                    Tab(child: Text('Cá Nhân')),
                   ],
                 ),
               ),
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    LocalContactWidget(),
                     ContactWidget(),
+                    LocalContactWidget(),
                   ],
                 ),
               ),

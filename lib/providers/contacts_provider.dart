@@ -10,6 +10,8 @@ class Contacts extends ChangeNotifier {
   List<Contact> _contacts = [];
   Contact _contact;
   bool _isSetInterceptor = false;
+  bool _isInit = true;
+  int _previousPage = 0;
 
   Contacts(this._token);
 
@@ -76,19 +78,29 @@ class Contacts extends ChangeNotifier {
   }
 
   Future<void> fetchAndSetUpContacts(int pageNumber) async {
-    print('Fetching...');
+    print('Fetching...$pageNumber');
+
+    if (!_isInit && pageNumber == _previousPage) {
+      print('Not Init or Refresh');
+      return;
+    }
+
     if (!_isSetInterceptor) {
       setUpDioWithHeader();
     }
 
     try {
+      print('Fetch Contacts starts...');
       Response response = await dio.get(
         url,
         queryParameters: {
           'page': pageNumber,
-          'limit': 30,
+          'limit': 50,
         },
       );
+
+      print('API Results length: ');
+      print(response.data['result'].length);
 
       response.data['result'].forEach(
         (e) {
@@ -102,6 +114,13 @@ class Contacts extends ChangeNotifier {
           _contacts.add(newContact);
         },
       );
+      print('Contacts List length: ');
+      print(_contacts.length);
+
+      // Set the init to false and previousPage to current page
+      _isInit = false;
+      _previousPage = pageNumber;
+
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -162,12 +181,14 @@ class Contacts extends ChangeNotifier {
   }
 
   Future<void> getOneContact(String contactId) async {
-    print('Getting contact info');
+    print('Getting one contact info');
 
     final String getOneContactUrl = kUrl + 'contact/$contactId';
 
     try {
+      print('Contact Detail starts...');
       Response response = await dio.get(getOneContactUrl);
+
       _contact = Contact(
         id: response.data['result']['_id'],
         firstName: response.data['result']['firstName'],
@@ -180,6 +201,7 @@ class Contacts extends ChangeNotifier {
       print('API finished');
       print(response.data['result']);
       print(_contact.toString());
+
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -199,7 +221,8 @@ class Contacts extends ChangeNotifier {
   }
 
   void clearContacts() {
-    print('Clearing...');
+    print('Clearing all contacts...');
     _contacts.clear();
+    _isInit = true;
   }
 }
