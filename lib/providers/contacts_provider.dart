@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 
 import 'package:dio/dio.dart';
@@ -232,7 +231,7 @@ class Contacts extends ChangeNotifier {
 
     try {
       print('Update Contact API starts...');
-      print('The contact id is $is, with info: $firstName , $lastName');
+      print('The contact id is $id, with info: $firstName , $lastName');
       Response response = await dio.put(
         updateContactUrl,
         data: {
@@ -240,7 +239,6 @@ class Contacts extends ChangeNotifier {
           "lastName": lastName,
           "gender": gender,
           "email": email,
-          "avatar": '',
         },
       );
 
