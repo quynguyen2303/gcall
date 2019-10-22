@@ -8,10 +8,16 @@ class CallLogs extends ChangeNotifier {
   final String _token;
   String stringFilter;
   bool _isSetInterceptor = false;
+
   List<CallLog> _allCallLogs = [];
   List<CallLog> _incomingCallLogs = [];
   List<CallLog> _outgoingCallLogs = [];
   List<CallLog> _missedCallLogs = [];
+
+  int _previousAllPage = 0;
+  int _previousIncPage = 0;
+  int _previousOutPage = 0;
+  int _previousMissPage = 0;
 
   var dio = Dio();
   final String url = kUrl + 'calllogs';
@@ -74,6 +80,30 @@ class CallLogs extends ChangeNotifier {
     // 'filter':  ,
   }
 
+  bool _isDuplicatePage(int currentPage, String filter) {
+    if (filter == 'incoming') {
+      return _previousIncPage >= currentPage;
+    } else if (filter == 'outgoing') {
+      return _previousOutPage >= currentPage;
+    } else if (filter == 'missed') {
+      return _previousMissPage >= currentPage;
+    } else {
+      return _previousAllPage >= currentPage;
+    }
+  }
+
+  void _setPreviousPage(int currentPage, String filter) {
+      if (filter == 'incoming') {
+      _previousIncPage = currentPage;
+    } else if (filter == 'outgoing') {
+      _previousOutPage = currentPage;
+    } else if (filter == 'missed') {
+      _previousMissPage = currentPage;
+    } else {
+      _previousAllPage = currentPage;
+    }
+  }
+
   Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
     // Set up Call Logs List
     // Set up the filter
@@ -83,7 +113,11 @@ class CallLogs extends ChangeNotifier {
     if (!_isSetInterceptor) {
       setUpDioWithHeader();
     }
-    // print('Page number in provider is $pageNumber');
+    // Check _previous page and current page
+    if (_isDuplicatePage(pageNumber, filter)) {
+      print('Not Init or Duplicate');
+      return;
+    }
 
     try {
       Response response = await dio.get(url, queryParameters: {
@@ -106,7 +140,7 @@ class CallLogs extends ChangeNotifier {
           dateCreated: '${startedAt.day}/${startedAt.month}',
           timeCreated: '${startedAt.hour}:${startedAt.minute}',
         );
-        
+
         if (filter == 'incoming') {
           _incomingCallLogs.add(newCallLog);
         } else if (filter == 'outgoing') {
@@ -119,7 +153,9 @@ class CallLogs extends ChangeNotifier {
       });
 
       print(_allCallLogs.length);
- 
+
+      // Update _previous page
+      _setPreviousPage(pageNumber, filter);
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.

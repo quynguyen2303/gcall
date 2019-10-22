@@ -16,6 +16,7 @@ class ContactsWidget extends StatefulWidget {
 
 class _ContactsWidgetState extends State<ContactsWidget>
     with AutomaticKeepAliveClientMixin {
+
   int pageNumber = 1;
   Timer timer;
 

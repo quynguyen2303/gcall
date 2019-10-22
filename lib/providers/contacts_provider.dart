@@ -81,7 +81,7 @@ class Contacts extends ChangeNotifier {
   Future<void> fetchAndSetUpContacts(int pageNumber) async {
     print('Fetching...$pageNumber');
 
-    if (!_isInit && pageNumber == _previousPage) {
+    if (!_isInit && _previousPage >= pageNumber) {
       print('Not Init or Refresh');
       return;
     }
@@ -270,7 +270,7 @@ class Contacts extends ChangeNotifier {
     try {
       print('Deleting Contact starts...');
       Response response = await dio.delete(getOneContactUrl);
- 
+
       print('API finished');
       print(response.data['success']);
     } on DioError catch (e) {
