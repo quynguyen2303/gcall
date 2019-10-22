@@ -106,6 +106,7 @@ class CallLogs extends ChangeNotifier {
           dateCreated: '${startedAt.day}/${startedAt.month}',
           timeCreated: '${startedAt.hour}:${startedAt.minute}',
         );
+        
         if (filter == 'incoming') {
           _incomingCallLogs.add(newCallLog);
         } else if (filter == 'outgoing') {
@@ -118,12 +119,7 @@ class CallLogs extends ChangeNotifier {
       });
 
       print(_allCallLogs.length);
-      // for (var i = 0; i < _callLogs.length; i++) {
-      //   print(_callLogs[i]);
-      // }
-      // for (var i = 0; i < response.data['result'].length; i++) {
-      //   print(response.data['result'][i]);
-      // }
+ 
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -161,24 +157,28 @@ class CallLogs extends ChangeNotifier {
   }
 
   String getInitialLetter(String firstName, String lastName) {
-    String name;
-    // print(firstName + ' and ' + lastName);
-    if (firstName == '' && lastName != '') {
-      // print(object)
-      name = lastName[0];
-    } else if (lastName == '' && firstName != '') {
-      final splittedName = firstName.split(' ');
-      // print(splittedName);
-      if (splittedName.length > 1) {
-        name = splittedName[0][0] + splittedName[1][0];
-      } else {
-        name = firstName[0];
-      }
-    } else {
-      name = firstName[0] + lastName[0];
-    }
-    return name;
+    return ((firstName?.isNotEmpty == true ? firstName[0] : "") +
+            (lastName?.isNotEmpty == true ? lastName[0] : ""))
+        .toUpperCase();
   }
+  //   String name;
+  //   // print(firstName + ' and ' + lastName);
+  //   if (firstName == '' && lastName != '') {
+  //     // print(object)
+  //     name = lastName[0];
+  //   } else if (lastName == '' && firstName != '') {
+  //     final splittedName = firstName.split(' ');
+  //     // print(splittedName);
+  //     if (splittedName.length > 1) {
+  //       name = splittedName[0][0] + splittedName[1][0];
+  //     } else {
+  //       name = firstName[0];
+  //     }
+  //   } else {
+  //     name = firstName[0] + lastName[0];
+  //   }
+  //   return name;
+  // }
 }
 
 class CallLog {

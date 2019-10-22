@@ -5,6 +5,8 @@ import 'package:flushbar/flushbar.dart';
 import '../config/Constants.dart';
 import '../config/Pallete.dart' as Pallete;
 
+import 'ContactsScreen.dart';
+
 import '../models/contact.dart';
 
 import 'package:provider/provider.dart';
@@ -54,13 +56,13 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
       _previousContact.setGender('unknown');
     }
 
-    await Provider.of<Contacts>(context).updateContact(
+    await Provider.of<Contacts>(context, listen: false).updateContact(
         _previousContact.id,
         _previousContact.firstName,
         _previousContact.lastName,
         _previousContact.gender,
         _previousContact.email);
- 
+
     Navigator.pop(context);
 
     Flushbar(
@@ -72,6 +74,38 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
       message: "Bạn đã chỉnh sửa một liên hệ",
       duration: Duration(seconds: 2),
     )..show(context);
+  }
+
+  Future<void> _showDeleteDialog() async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('BẠN CÓ CHẮC MUỐN XÓA?'),
+            content: Text('Bạn sẽ không thể khôi phục được dữ liệu đã xóa.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('HỦY'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('XÓA'),
+                onPressed: () async {
+                  await Provider.of<Contacts>(context, listen: false)
+                      .deleteContact(_previousContact.id);
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+
+                  // Future.delayed(Duration(seconds: 0));
+                  // Navigator.of(context)
+                  //     .popUntil(ModalRoute.withName(ContactsScreen.routeName));
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -283,7 +317,18 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      RaisedButton(
+                        color: Colors.white,
+                        textColor: Colors.red,
+                        child: Text(
+                          'Xóa liên hệ',
+                        ),
+                        onPressed: () async {
+                          // TODO: delete the contact
+                          await _showDeleteDialog();
+                        },
+                      ),
                     ],
                   )),
                 ),

@@ -16,8 +16,9 @@ class ContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed(ContactDetailScreen.routeName,
+        onTap: () async {
+          // try to get reload after navigator pop
+          await Navigator.of(context).pushNamed(ContactDetailScreen.routeName,
               arguments: ContactItem(id: this.id));
         },
         child: Row(
