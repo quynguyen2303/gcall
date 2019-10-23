@@ -14,6 +14,11 @@ class CallLogs extends ChangeNotifier {
   List<CallLog> _outgoingCallLogs = [];
   List<CallLog> _missedCallLogs = [];
 
+  int _currentAllPage = 1;
+  int _currentIncPage = 1;
+  int _currentOutPage = 1;
+  int _currentMissPage = 1;
+
   int _previousAllPage = 0;
   int _previousIncPage = 0;
   int _previousOutPage = 0;
@@ -55,7 +60,7 @@ class CallLogs extends ChangeNotifier {
   }
 
   // Set up Dio with header
-  void setUpDioWithHeader() {
+  void _setUpDioWithHeader() {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       options.headers['x-sessiontoken'] = _token;
@@ -63,7 +68,7 @@ class CallLogs extends ChangeNotifier {
     _isSetInterceptor = true;
   }
 
-  void setFilter(String filter) {
+  void _setFilter(String filter) {
     if (filter == 'incoming') {
       stringFilter =
           '{"direction": "incoming" , "status": { "\$ne" : "missed" } }';
@@ -80,20 +85,32 @@ class CallLogs extends ChangeNotifier {
     // 'filter':  ,
   }
 
-  bool _isDuplicatePage(int currentPage, String filter) {
+  bool _isDuplicatePage(String filter) {
     if (filter == 'incoming') {
-      return _previousIncPage >= currentPage;
+      return _previousIncPage >= _currentIncPage;
     } else if (filter == 'outgoing') {
-      return _previousOutPage >= currentPage;
+      return _previousOutPage >= _currentOutPage;
     } else if (filter == 'missed') {
-      return _previousMissPage >= currentPage;
+      return _previousMissPage >= _currentMissPage;
     } else {
-      return _previousAllPage >= currentPage;
+      return _previousAllPage >= _currentAllPage;
+    }
+  }
+
+  int _setPageNumber(String filter) {
+    if (filter == 'incoming') {
+      return _currentIncPage;
+    } else if (filter == 'outgoing') {
+      return _currentOutPage;
+    } else if (filter == 'missed') {
+      return _currentMissPage;
+    } else {
+      return _currentAllPage;
     }
   }
 
   void _setPreviousPage(int currentPage, String filter) {
-      if (filter == 'incoming') {
+    if (filter == 'incoming') {
       _previousIncPage = currentPage;
     } else if (filter == 'outgoing') {
       _previousOutPage = currentPage;
@@ -104,32 +121,47 @@ class CallLogs extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetCallLogs(int pageNumber, [String filter = '']) async {
+  Future<void> loadingMoreCallLogs([String filter = '']) async {
+    if (filter == 'incoming') {
+      _currentIncPage++;
+    } else if (filter == 'outgoing') {
+      _currentOutPage++;
+    } else if (filter == 'missed') {
+      _currentMissPage++;
+    } else {
+      _currentAllPage++;
+    }
+    await fetchAndSetCallLogs(filter);
+  }
+
+  Future<void> fetchAndSetCallLogs([String filter = '']) async {
     // Set up Call Logs List
     // Set up the filter
     // print(filter);
-    setFilter(filter);
+    _setFilter(filter);
     // Set up header with _token
     if (!_isSetInterceptor) {
-      setUpDioWithHeader();
+      _setUpDioWithHeader();
     }
     // Check _previous page and current page
-    if (_isDuplicatePage(pageNumber, filter)) {
+    if (_isDuplicatePage(filter)) {
       print('Not Init or Duplicate');
       return;
     }
 
     try {
+      int pageNumber = _setPageNumber(filter);
+      print('Page number of $filter is: $pageNumber');
       Response response = await dio.get(url, queryParameters: {
         'page': pageNumber,
         'filter': stringFilter,
       });
-      print(response.data['result'].length);
+      // print(response.data['result'].length);
       response.data['result'].forEach((e) {
         final firstName = e['contact']['firstName'];
         final lastName = e['contact']['lastName'];
         final startedAt = DateTime.fromMillisecondsSinceEpoch(e['createdAt']);
-        final status = checkCallLogStatus(e['direction'], e['status']);
+        final status = _checkCallLogStatus(e['direction'], e['status']);
         final twoLetter = getInitialLetter(firstName, lastName);
         // print(firstName + lastName + startedAt.toString() + direction + status);
         // });
@@ -179,7 +211,7 @@ class CallLogs extends ChangeNotifier {
     // print(callLogs[2]['_id']+ " & contact id: " + callLogs[2]['contact']['_id']);
   }
 
-  CallStatus checkCallLogStatus(String direction, String status) {
+  CallStatus _checkCallLogStatus(String direction, String status) {
     // print(direction + status);
     if (direction == 'outgoing') {
       return CallStatus.outgoing;

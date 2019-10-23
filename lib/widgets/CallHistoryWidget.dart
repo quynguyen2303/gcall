@@ -17,37 +17,23 @@ class CallHistoryWidget extends StatefulWidget {
 
 class _CallHistoryWidgetState extends State<CallHistoryWidget>
     with AutomaticKeepAliveClientMixin {
-  int pageNumber = 1;
   String filter;
-  // bool _isLoading;
 
   ScrollController _scrollController;
   Future<void> _loadingCallLogs;
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
-  void _scrollListener() {
+  void _scrollListener() async {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      // setState(() {
-      // _isLoading = true;
-      pageNumber += 1;
-      // });
-      Provider.of<CallLogs>(context, listen: false)
-          .fetchAndSetCallLogs(pageNumber, filter);
+   
+      await Provider.of<CallLogs>(context, listen: false)
+          .loadingMoreCallLogs(filter);
 
-      // print('Loaded');
-      // setState(() {
-      //   _isLoading = false;
-      // });
-
-      // print('Got the bootom and the page is $pageNumber');
+     
     }
-    // if (_scrollController.offset <=
-    //         _scrollController.position.minScrollExtent &&
-    //     !_scrollController.position.outOfRange) {
-    //   // print('Got the top');
-    // }
+
   }
 
   @override
@@ -61,7 +47,7 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _loadingCallLogs = Provider.of<CallLogs>(context, listen: false)
-        .fetchAndSetCallLogs(pageNumber, filter);
+        .fetchAndSetCallLogs(filter);
     super.initState();
   }
 

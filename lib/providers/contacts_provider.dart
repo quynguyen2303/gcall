@@ -103,7 +103,7 @@ class Contacts extends ChangeNotifier {
         url,
         queryParameters: {
           'page': pageNumber,
-          'limit': 50,
+          // 'limit': 50,
         },
       );
 
