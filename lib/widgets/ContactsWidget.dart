@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'ContactItem.dart';
 
@@ -16,40 +17,36 @@ class ContactsWidget extends StatefulWidget {
 
 class _ContactsWidgetState extends State<ContactsWidget>
     with AutomaticKeepAliveClientMixin {
-
-  int pageNumber = 1;
+  // int pageNumber = 1;
   Timer timer;
 
   TextEditingController _editingController = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   Future<void> _loadingContacts;
 
-  void _scrollListener() {
+  void _scrollListener() async {
     // print('Scorll start...');
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange && _editingController.text.isEmpty) {
-      // setState(
-      //   () {
-          // _isLoading = true;
-          pageNumber += 1;
-      //   },
-      // );
-
-      Provider.of<Contacts>(context, listen: false)
-          .fetchAndSetUpContacts(pageNumber);
+        !_scrollController.position.outOfRange &&
+        _editingController.text.isEmpty) {
+      
+      await Provider.of<Contacts>(context, listen: false)
+          .loadingMoreContacts();
     }
   }
 
-  void fetchSearchContacts() {
+  void fetchSearchContacts() async {
     final String query = _editingController.text;
     if (query.isNotEmpty) {
-      Provider.of<Contacts>(context, listen: false).searchContacts(query);
+      await Provider.of<Contacts>(context, listen: false).searchContacts(query);
     }
   }
 
-  void queryContacts() {
+  void queryContacts() async {
     print(_editingController.text);
     if (_editingController.text.isNotEmpty) {
       print(_editingController.text == '');
@@ -61,9 +58,8 @@ class _ContactsWidgetState extends State<ContactsWidget>
     } else {
       print(_editingController.text == '');
       Provider.of<Contacts>(context, listen: false).clearContacts();
-      pageNumber = 1;
-      Provider.of<Contacts>(context, listen: false)
-          .fetchAndSetUpContacts(pageNumber);
+      await Provider.of<Contacts>(context, listen: false)
+          .fetchAndSetUpContacts();
     }
   }
 
@@ -84,14 +80,15 @@ class _ContactsWidgetState extends State<ContactsWidget>
     _editingController.addListener(queryContacts);
     _scrollController.addListener(_scrollListener);
 
-    _loadingContacts = Provider.of<Contacts>(context, listen: false).fetchAndSetUpContacts(pageNumber);
+    _loadingContacts = Provider.of<Contacts>(context, listen: false)
+        .fetchAndSetUpContacts();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print(pageNumber);
+    // print(pageNumber);
 
     return Container(
       child: Column(
@@ -125,14 +122,27 @@ class _ContactsWidgetState extends State<ContactsWidget>
                     );
                   } else {
                     return Consumer<Contacts>(
-                      builder: (context, contactsData, child) =>
-                          ListView.builder(
-                        controller: _scrollController,
-                        itemCount: contactsData.contacts.length,
-                        itemBuilder: (context, index) => ContactItem(
-                          id: contactsData.contacts[index].id,
-                          name: contactsData.contacts[index].displayName,
-                          initialLetter: contactsData.contacts[index].initials,
+                      builder: (context, contactsData, child) => SmartRefresher(
+                        enablePullDown: true,
+                        enablePullUp: true,
+                        controller: _refreshController,
+                        onRefresh: () async {
+                          await Future.delayed(Duration(seconds: 1));
+                          _refreshController.refreshCompleted();
+                        },
+                        onLoading: () async {
+                          await Future.delayed(Duration(seconds: 1));
+                          _refreshController.refreshCompleted();
+                        },
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: contactsData.contacts.length,
+                          itemBuilder: (context, index) => ContactItem(
+                            id: contactsData.contacts[index].id,
+                            name: contactsData.contacts[index].displayName,
+                            initialLetter:
+                                contactsData.contacts[index].initials,
+                          ),
                         ),
                       ),
                     );

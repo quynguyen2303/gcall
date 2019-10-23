@@ -8,11 +8,13 @@ import '../models/contact.dart';
 
 class Contacts extends ChangeNotifier {
   final String _token;
+  int pageNumber = 1;
+  int _previousPage = 0;
+  bool _isInit = true;
+
   List<Contact> _contacts = [];
   Contact _contact;
   bool _isSetInterceptor = false;
-  bool _isInit = true;
-  int _previousPage = 0;
 
   Contacts(this._token);
 
@@ -27,7 +29,7 @@ class Contacts extends ChangeNotifier {
     return _contacts;
   }
 
-  void setUpDioWithHeader() {
+  void _setUpDioWithHeader() {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       options.headers['x-sessiontoken'] = _token;
@@ -78,16 +80,21 @@ class Contacts extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetUpContacts(int pageNumber) async {
+  Future<void> loadingMoreContacts() async {
+    pageNumber++;
+    await fetchAndSetUpContacts();
+  }
+
+  Future<void> fetchAndSetUpContacts() async {
     print('Fetching...$pageNumber');
 
     if (!_isInit && _previousPage >= pageNumber) {
-      print('Not Init or Refresh');
+      print('Not Init or Already loaded this page number.');
       return;
     }
 
     if (!_isSetInterceptor) {
-      setUpDioWithHeader();
+      _setUpDioWithHeader();
     }
 
     try {
@@ -117,7 +124,6 @@ class Contacts extends ChangeNotifier {
       );
       print('Contacts List length: ');
       print(_contacts.length);
-
       // Set the init to false and previousPage to current page
       _isInit = false;
       _previousPage = pageNumber;
@@ -137,14 +143,13 @@ class Contacts extends ChangeNotifier {
       }
       throw (e);
     }
-
     notifyListeners();
   }
 
   Future<void> createContact(String firstName, String lastName, String gender,
       String phone, String email) async {
     if (!_isSetInterceptor) {
-      setUpDioWithHeader();
+      _setUpDioWithHeader();
     }
     const String createContactUrl = kUrl + 'contact';
 
@@ -224,7 +229,7 @@ class Contacts extends ChangeNotifier {
     print('Updating a contact...');
 
     if (!_isSetInterceptor) {
-      setUpDioWithHeader();
+      _setUpDioWithHeader();
     }
 
     final String updateContactUrl = kUrl + 'contact/$id';
@@ -294,6 +299,7 @@ class Contacts extends ChangeNotifier {
   void clearContacts() {
     print('Clearing all contacts...');
     _contacts.clear();
+    pageNumber = 1;
     _isInit = true;
   }
 }
