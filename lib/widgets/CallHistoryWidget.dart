@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'CallLogItem.dart';
 
@@ -22,14 +23,15 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
 
   ScrollController _scrollController;
   Future<void> _loadingCallLogs;
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   void _scrollListener() {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
       // setState(() {
-        // _isLoading = true;
-        pageNumber += 1;
+      // _isLoading = true;
+      pageNumber += 1;
       // });
       Provider.of<CallLogs>(context, listen: false)
           .fetchAndSetCallLogs(pageNumber, filter);
@@ -93,18 +95,31 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
             );
           } else {
             return Consumer<CallLogs>(
-              builder: (context, callLogsData, child) => ListView.builder(
-                controller: _scrollController,
-                padding: EdgeInsets.symmetric(vertical: 10),
-                itemCount: callLogsData.getCallLogs(filter).length,
-                itemBuilder: (context, index) => CallLogItem(
-                    name: callLogsData.getCallLogs(filter)[index].name,
-                    initialLetter:
-                        callLogsData.getCallLogs(filter)[index].initialLetter,
-                    date: callLogsData.getCallLogs(filter)[index].dateCreated,
-                    time: callLogsData.getCallLogs(filter)[index].timeCreated,
-                    status:
-                        callLogsData.getCallLogs(filter)[index].statusString),
+              builder: (context, callLogsData, child) => SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                controller: _refreshController,
+                onRefresh: () async {
+                  await Future.delayed(Duration(seconds: 1));
+                  _refreshController.refreshCompleted();
+                },
+                onLoading: () async {
+                  await Future.delayed(Duration(seconds: 1));
+                  _refreshController.refreshCompleted();
+                },
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  itemCount: callLogsData.getCallLogs(filter).length,
+                  itemBuilder: (context, index) => CallLogItem(
+                      name: callLogsData.getCallLogs(filter)[index].name,
+                      initialLetter:
+                          callLogsData.getCallLogs(filter)[index].initialLetter,
+                      date: callLogsData.getCallLogs(filter)[index].dateCreated,
+                      time: callLogsData.getCallLogs(filter)[index].timeCreated,
+                      status:
+                          callLogsData.getCallLogs(filter)[index].statusString),
+                ),
               ),
             );
           }
