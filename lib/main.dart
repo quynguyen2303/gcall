@@ -17,6 +17,7 @@ import 'screens/InformationScreen.dart';
 import 'screens/CreateContactScreen.dart';
 import 'screens/ContactDetailScreen.dart';
 import 'screens/UpdateContactScreen.dart';
+import 'screens/ActivitiesScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -70,6 +71,7 @@ class GCall extends StatelessWidget {
             InformationScreen.routeName: (context) => InformationScreen(),
             CreateContactScreen.routeName: (context) => CreateContactScreen(),
             ContactDetailScreen.routeName: (context) => ContactDetailScreen(),
+            ActivitiesScreen.routeName: (context) => ActivitiesScreen(),
             // UpdateContactScreen.routeName: (context) => UpdateContactScreen(),
           },
           onGenerateRoute: (settings) {

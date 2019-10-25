@@ -20,7 +20,6 @@ class ContactDetailScreen extends StatelessWidget {
     final ContactItem args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      
       appBar: AppBar(
         title: Text(
           'CHI TIẾT LIÊN HỆ',

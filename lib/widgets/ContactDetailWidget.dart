@@ -27,7 +27,6 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
         future: _loadingContacts,
         builder: (context, dataSnapshot) {
@@ -86,7 +85,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                             children: <Widget>[
                               LabeledButton(
                                 title: 'Gọi',
-                                icon: kPhoneIncoming,
+                                icon: kPhoneButton,
                                 onPressed: () {},
                               ),
                               LabeledButton(
@@ -96,11 +95,11 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                               ),
                               LabeledButton(
                                 title: 'Nhắc nhở',
-                                icon: kAlarm,
+                                icon: kReminder,
                                 onPressed: () {},
                               ),
                             ],
-                          )
+                          ),
                         ],
                       )),
                     ),
@@ -195,13 +194,14 @@ class LabeledButton extends StatelessWidget {
         FlatButton(
           onPressed: onPressed,
           shape: CircleBorder(
-            side: BorderSide(
-              width: 1.0,
-              color: Pallete.primaryColor,
-            ),
-          ),
+              // side: BorderSide(
+              //   width: 1.0,
+              //   color: Pallete.primaryColor,
+              // ),
+              ),
           child: ImageIcon(
             AssetImage(icon),
+            size: 40.0,
             color: Pallete.primaryColor,
           ),
         ),
