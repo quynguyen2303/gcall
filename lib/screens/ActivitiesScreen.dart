@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/ActivityHeaderWidget.dart';
 import '../widgets/NoteItem.dart';
 import '../widgets/ReminderItem.dart';
+import '../widgets/PlayerItem.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   static const routeName = './activities_screen';
@@ -28,6 +29,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 children: <Widget>[
                   NoteItem(),
                   ReminderItem(),
+                  PlayerWidget(),
                 ],
               ),
             )

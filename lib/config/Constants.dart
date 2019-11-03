@@ -15,6 +15,7 @@ const kNoteSquare = 'assets/icons/note_square.png';
 const kReminder = 'assets/icons/alarm.png';
 const kMoreButton = 'assets/icons/more_button.png';
 const KRemindSquare = 'assets/icons/remind_square.png';
+const kDownload = 'assets/icons/download_button.png';
 
 const kActivityIconWidth = 30.0;
 const kActivityIconHeight = 30.0;
