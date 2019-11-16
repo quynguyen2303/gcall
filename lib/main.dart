@@ -7,6 +7,7 @@ import 'providers/call_logs_provider.dart';
 import 'providers/contacts_provider.dart';
 import 'providers/local_contacts_provider.dart';
 import 'providers/info_provider.dart';
+import 'providers/activities_provider.dart';
 
 import 'screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
@@ -44,7 +45,10 @@ class GCall extends StatelessWidget {
             builder: (context, auth, previousInfo) => Info(auth.token)),
         ChangeNotifierProvider.value(
           value: LocalContacts(),
-        )
+        ),
+        ChangeNotifierProxyProvider<Auth, Activities>(
+          builder: (context, auth, previousActivities) => Activities(auth.token),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(

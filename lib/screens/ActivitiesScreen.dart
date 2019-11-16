@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../widgets/ContactActivityWidget.dart';
 import '../widgets/ActivityHeaderWidget.dart';
 import '../widgets/NoteItem.dart';
 import '../widgets/ReminderItem.dart';
 import '../widgets/PlayerItem.dart';
+
+import '../providers/activities_provider.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   static const routeName = './activities_screen';
@@ -14,6 +18,9 @@ class ActivitiesScreen extends StatefulWidget {
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   Widget build(BuildContext context) {
+    final ContactActivityWidget args = ModalRoute.of(context).settings.arguments;
+    Provider.of<Activities>(context, listen: false).fetchAndSetUpActivities(args.id);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin Hoạt động'),

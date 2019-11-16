@@ -41,7 +41,7 @@ class ContactDetailScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Flexible(flex: 1, child: ContactDetailWidget(id: args.id)),
-            Flexible(flex: 1, child: ContactActivityWidget()),
+            Flexible(flex: 1, child: ContactActivityWidget(args.id)),
           ],
         ),
       ),
