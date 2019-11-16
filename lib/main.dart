@@ -47,7 +47,8 @@ class GCall extends StatelessWidget {
           value: LocalContacts(),
         ),
         ChangeNotifierProxyProvider<Auth, Activities>(
-          builder: (context, auth, previousActivities) => Activities(auth.token),
+          builder: (context, auth, previousActivities) =>
+              Activities(auth.token),
         ),
       ],
       child: Consumer<Auth>(
@@ -78,24 +79,19 @@ class GCall extends StatelessWidget {
             ActivitiesScreen.routeName: (context) => ActivitiesScreen(),
             // UpdateContactScreen.routeName: (context) => UpdateContactScreen(),
           },
+          // Pass data to UpdateContactScreen to get it outside of build() from widget 
+          // pushName arguments can only access inside build()
           onGenerateRoute: (settings) {
-            // If push to UpdateContactScree
+            // If push to UpdateContactScreen
             if (settings.name == UpdateContactScreen.routeName) {
               final ContactDetailScreen args = settings.arguments;
-              return MaterialPageRoute(builder: (context) {
-                return UpdateContactScreen(id: args.contactId);
-              });
-            } 
-
-            // test with popUntil 
-            // if (settings.name == ContactsScreen.routeName) {
-            //   return MaterialPageRoute(
-            //     settings: RouteSettings(name: ContactsScreen.routeName),
-            //     builder: (context) {
-            //       return ContactsScreen();
-            //     }
-            //   );
-            // }
+              return MaterialPageRoute(
+                builder: (context) {
+                  return UpdateContactScreen(id: args.contactId);
+                },
+              );
+            }
+            return MaterialPageRoute();
           },
         ),
       ),

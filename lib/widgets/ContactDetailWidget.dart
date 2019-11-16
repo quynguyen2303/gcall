@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../config/Constants.dart';
 import '../config/Pallete.dart' as Pallete;
 
-import '../providers/contacts_provider.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String contactId;
