@@ -19,7 +19,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   Widget build(BuildContext context) {
     final ContactActivityWidget args = ModalRoute.of(context).settings.arguments;
-    Provider.of<Activities>(context, listen: false).fetchAndSetUpActivities(args.id);
+    Provider.of<Activities>(context, listen: false).fetchAndSetUpActivities(args.contactId, args.contactName);
 
     return Scaffold(
       appBar: AppBar(

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../screens/ActivitiesScreen.dart';
 
 class ContactActivityWidget extends StatelessWidget {
-  final String id;
+  final String contactId;
+  final String contactName;
 
-  ContactActivityWidget(this.id);
+  ContactActivityWidget(this.contactId, this.contactName);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ContactActivityWidget extends StatelessWidget {
           child: Text('Lịch sử hoạt động'),
           onPressed: () {
             Navigator.of(context).pushNamed(ActivitiesScreen.routeName,
-                arguments: ContactActivityWidget(this.id));
+                arguments: ContactActivityWidget(this.contactId, this.contactName));
           },
         ),
       ),

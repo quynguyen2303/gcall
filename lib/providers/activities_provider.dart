@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+
+import '../models/activity.dart';
 import '../config/Constants.dart';
 
 class Activities extends ChangeNotifier {
   final String _token;
   // final String idContact;
   bool _isSetInterceptor = false;
+  List<Activity> activities = [];
 
   Activities(
     this._token,
@@ -21,7 +24,7 @@ class Activities extends ChangeNotifier {
     _isSetInterceptor = true;
   }
 
-  Future<void> fetchAndSetUpActivities(String idContact) async {
+  Future<void> fetchAndSetUpActivities(String idContact, String contactName) async {
     final String url = kUrl + 'contact/$idContact/activities';
     if (!_isSetInterceptor) {
       _setUpDioWithHeader();
@@ -31,7 +34,18 @@ class Activities extends ChangeNotifier {
       Response response = await dio.get(url);
       print(response.data['result'].length);
       response.data['result'].forEach(
-        (activity) => print(activity['type'])
+        (activity) {
+          if (activity['type'] == 'calllog') {
+            // TODO
+            activity['body']['recordUrl'];
+          } else if (activity['type'] == 'note') {
+            // TODO
+          } else if (activity['type'] == 'reminder') {
+            // TODO
+          } else {
+            print('The activity type is not correct!');
+          }
+        }
       );
       print(response.data['result']);
     } on DioError catch (e) {

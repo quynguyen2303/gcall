@@ -1,4 +1,6 @@
-class Reminder {
+import 'package:gcall/models/activity.dart';
+
+class Reminder extends Activity {
   final String idContact;
   final String contactName;
   final String idReceiver;

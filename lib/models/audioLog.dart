@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:gcall/models/activity.dart';
 
-class AudioLog {
+
+class AudioLog extends Activity {
   final String url;
   final String idContact;
   final String contactName;

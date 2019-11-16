@@ -116,9 +116,16 @@ class Contacts extends ChangeNotifier {
           final String firstName = e['firstName'];
           final String lastName = e['lastName'];
           final String phone = e['phone'];
+          final String email = e['email'];
+          final String gender = e['gender'];
 
           final newContact = Contact(
-              id: id, firstName: firstName, lastName: lastName, phone: phone);
+              id: id,
+              firstName: firstName,
+              lastName: lastName,
+              phone: phone,
+              email: email,
+              gender: gender);
           _contacts.add(newContact);
         },
       );

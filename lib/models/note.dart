@@ -1,4 +1,6 @@
-class Note {
+import 'package:gcall/models/activity.dart';
+
+class Note extends Activity {
   final String idContact;
   final String contactName;
   String noteText;

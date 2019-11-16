@@ -83,7 +83,7 @@ class GCall extends StatelessWidget {
             if (settings.name == UpdateContactScreen.routeName) {
               final ContactDetailScreen args = settings.arguments;
               return MaterialPageRoute(builder: (context) {
-                return UpdateContactScreen(id: args.id);
+                return UpdateContactScreen(id: args.contactId);
               });
             } 
 

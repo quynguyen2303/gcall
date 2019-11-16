@@ -7,10 +7,20 @@ import '../screens/ContactDetailScreen.dart';
 
 class ContactItem extends StatelessWidget {
   final String initialLetter;
-  final String name;
-  final String id;
+  final String contactName;
+  final String contactId;
+  final String contactPhone;
+  final String contactEmail;
+  final String contactGender;
 
-  ContactItem({@required this.id, this.initialLetter, this.name});
+  ContactItem({
+    @required this.contactId,
+    this.initialLetter,
+    this.contactName,
+    this.contactEmail,
+    this.contactPhone,
+    this.contactGender,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +28,17 @@ class ContactItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () async {
           // try to get reload after navigator pop
-          await Navigator.of(context).pushNamed(ContactDetailScreen.routeName,
-              arguments: ContactItem(id: this.id));
+          await Navigator.of(context).pushNamed(
+            ContactDetailScreen.routeName,
+            arguments: ContactItem(
+              contactId: this.contactId,
+              contactName: this.contactName,
+              initialLetter: this.initialLetter,
+              contactEmail: this.contactEmail,
+              contactPhone: this.contactPhone,
+              contactGender: this.contactGender,
+            ),
+          );
         },
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -38,7 +57,7 @@ class ContactItem extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                '$name',
+                '$contactName',
                 style: kContactNameTextStyle,
               ),
             ),

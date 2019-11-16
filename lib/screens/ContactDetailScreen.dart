@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gcall/widgets/ContactItem.dart';
 
 import '../config/Constants.dart';
 
@@ -7,13 +6,14 @@ import 'UpdateContactScreen.dart';
 
 import '../widgets/ContactActivityWidget.dart';
 import '../widgets/ContactDetailWidget.dart';
+import '../widgets/ContactItem.dart';
 
 class ContactDetailScreen extends StatelessWidget {
   static const routeName = './contact_detail';
 
-  final String id;
+  final String contactId;
 
-  ContactDetailScreen({this.id});
+  ContactDetailScreen({this.contactId});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,8 @@ class ContactDetailScreen extends StatelessWidget {
           FlatButton(
             child: Text('Chỉnh sửa', style: TextStyle(color: Colors.white)),
             onPressed: () {
-              // TODO: push to edit
               Navigator.pushNamed(context, UpdateContactScreen.routeName,
-                  arguments: ContactDetailScreen(id: args.id));
+                  arguments: ContactDetailScreen(contactId: args.contactId));
             },
           )
         ],
@@ -40,8 +39,24 @@ class ContactDetailScreen extends StatelessWidget {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
-            Flexible(flex: 1, child: ContactDetailWidget(id: args.id)),
-            Flexible(flex: 1, child: ContactActivityWidget(args.id)),
+            Flexible(
+              flex: 1,
+              child: ContactDetailWidget(
+                args.contactId,
+                args.contactName,
+                args.initialLetter,
+                args.contactPhone,
+                args.contactEmail,
+                args.contactGender,
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: ContactActivityWidget(
+                args.contactId,
+                args.contactName,
+              ),
+            ),
           ],
         ),
       ),

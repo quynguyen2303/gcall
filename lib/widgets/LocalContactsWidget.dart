@@ -105,8 +105,8 @@ class _LocalContactWidgetState extends State<LocalContactWidget>
                       builder: (context, localContacts, _) => ListView.builder(
                         itemCount: localContacts.contacts.length,
                         itemBuilder: (context, index) => ContactItem(
-                          id: '', // TODO: fix this
-                          name: localContacts.contacts[index].displayName,
+                          contactId: '', // TODO: fix this
+                          contactName: localContacts.contacts[index].displayName,
                           initialLetter: localContacts.contacts[index].initials,
                         ),
                       ),

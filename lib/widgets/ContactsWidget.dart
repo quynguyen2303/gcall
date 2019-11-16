@@ -33,9 +33,7 @@ class _ContactsWidgetState extends State<ContactsWidget>
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange &&
         _editingController.text.isEmpty) {
-      
-      await Provider.of<Contacts>(context, listen: false)
-          .loadingMoreContacts();
+      await Provider.of<Contacts>(context, listen: false).loadingMoreContacts();
     }
   }
 
@@ -80,8 +78,8 @@ class _ContactsWidgetState extends State<ContactsWidget>
     _editingController.addListener(queryContacts);
     _scrollController.addListener(_scrollListener);
 
-    _loadingContacts = Provider.of<Contacts>(context, listen: false)
-        .fetchAndSetUpContacts();
+    _loadingContacts =
+        Provider.of<Contacts>(context, listen: false).fetchAndSetUpContacts();
     super.initState();
   }
 
@@ -138,10 +136,14 @@ class _ContactsWidgetState extends State<ContactsWidget>
                           controller: _scrollController,
                           itemCount: contactsData.contacts.length,
                           itemBuilder: (context, index) => ContactItem(
-                            id: contactsData.contacts[index].id,
-                            name: contactsData.contacts[index].displayName,
+                            contactId: contactsData.contacts[index].id,
+                            contactName:
+                                contactsData.contacts[index].displayName,
                             initialLetter:
                                 contactsData.contacts[index].initials,
+                            contactEmail: contactsData.contacts[index].email,
+                            contactPhone: contactsData.contacts[index].phone,
+                            contactGender: contactsData.contacts[index].genderInfo,
                           ),
                         ),
                       ),
