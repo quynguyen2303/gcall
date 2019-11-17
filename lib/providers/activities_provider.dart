@@ -1,7 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
+import '../models/audioLog.dart';
 import '../models/activity.dart';
+import '../models/note.dart';
+import '../models/reminder.dart';
+
 import '../config/Constants.dart';
 
 class Activities extends ChangeNotifier {
@@ -24,7 +29,8 @@ class Activities extends ChangeNotifier {
     _isSetInterceptor = true;
   }
 
-  Future<void> fetchAndSetUpActivities(String idContact, String contactName) async {
+  Future<void> fetchAndSetUpActivities(
+      String idContact, String contactName) async {
     final String url = kUrl + 'contact/$idContact/activities';
     if (!_isSetInterceptor) {
       _setUpDioWithHeader();
@@ -36,18 +42,48 @@ class Activities extends ChangeNotifier {
       response.data['result'].forEach(
         (activity) {
           if (activity['type'] == 'calllog') {
-            // TODO
-            activity['body']['recordUrl'];
+            AudioLog audioLog = AudioLog(
+              url: activity['body']['recordUrl'],
+              idContact: idContact,
+              contactName: contactName,
+              createdAt:
+                  DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
+              duration: activity['body']['duration'],
+            );
+            activities.add(audioLog);
           } else if (activity['type'] == 'note') {
-            // TODO
+            Note note = Note(
+              idContact: idContact,
+              contactName: contactName,
+              noteText: activity['text'],
+              createdAt:
+                  DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
+            );
+            activities.add(note);
           } else if (activity['type'] == 'reminder') {
-            // TODO
+            Reminder reminder = Reminder(
+              idContact: idContact,
+              contactName: contactName,
+              idReceiver: activity['body']['remindedAgent'],
+              receiverName: 'Default', // TODO: fix receiverName
+              createdAt:
+                  DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
+              remindAt: DateTime.fromMillisecondsSinceEpoch(
+                  activity['body']['duedate']),
+              status: activity['body']['status'],
+            );
+            activities.add(reminder);
           } else {
             print('The activity type is not correct!');
           }
-        }
+        },
       );
-      print(response.data['result']);
+      print(response.data['result'].length);
+
+      // JsonEncoder encoder = JsonEncoder.withIndent(' ');
+      // String prettyPrint = encoder.convert(response.data['result']);
+      // prettyPrint.split('\n').forEach((e) => print(e));
+      print(activities.length);
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.

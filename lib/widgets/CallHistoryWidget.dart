@@ -21,19 +21,16 @@ class _CallHistoryWidgetState extends State<CallHistoryWidget>
 
   ScrollController _scrollController;
   Future<void> _loadingCallLogs;
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   void _scrollListener() async {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-   
       await Provider.of<CallLogs>(context, listen: false)
           .loadingMoreCallLogs(filter);
-
-     
     }
-
   }
 
   @override
