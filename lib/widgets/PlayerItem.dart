@@ -4,12 +4,12 @@ import '../config/Constants.dart';
 
 import '../models/audioLog.dart';
 
-class PlayerWidget extends StatefulWidget {
+class PlayerItem extends StatefulWidget {
   @override
-  _PlayerWidgetState createState() => _PlayerWidgetState();
+  _PlayerItemState createState() => _PlayerItemState();
 }
 
-class _PlayerWidgetState extends State<PlayerWidget> {
+class _PlayerItemState extends State<PlayerItem> {
   AudioLog _audioLog =
       AudioLog(url: '', contactName: 'Phu Quy', createdAt: DateTime.now());
 

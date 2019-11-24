@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gcall/models/audioLog.dart';
+import 'package:gcall/models/note.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:async/async.dart';
 
 import '../widgets/ContactActivityWidget.dart';
 import '../widgets/ActivityHeaderWidget.dart';
@@ -17,33 +20,96 @@ class ActivitiesScreen extends StatefulWidget {
 }
 
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
+  Future<void> _loadingActivities;
+  ScrollController _scrollController;
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  AsyncMemoizer _memoizer = AsyncMemoizer();
+
+  void _scrollListener() async {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      // TODO: update provider to get next activites
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ContactActivityWidget args = ModalRoute.of(context).settings.arguments;
-    Provider.of<Activities>(context, listen: false).fetchAndSetUpActivities(args.contactId, args.contactName);
+    final ContactActivityWidget args =
+        ModalRoute.of(context).settings.arguments;
+    _loadingActivities = _memoizer.runOnce(() {
+      Provider.of<Activities>(
+        context,
+      ).fetchAndSetUpActivities(args.contactId, args.contactName);
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin Hoạt động'),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ActivityHeaderWidget(),
-            Flexible(
-              child: ListView(
-                children: <Widget>[
-                  NoteItem(),
-                  ReminderItem(),
-                  PlayerWidget(),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+      body: FutureBuilder(
+          future: _loadingActivities,
+          builder: (context, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (dataSnapshot.error != null) {
+                // TODO: Handling errors
+                print(dataSnapshot.error);
+                return Center(
+                  child: Text('Got an error!'),
+                );
+              } else {
+                return Consumer<Activities>(
+                  builder: (context, activitiesData, _) => Column(
+                    children: <Widget>[
+                      ActivityHeaderWidget(),
+                      Expanded(
+                        child: SmartRefresher(
+                          enablePullDown: true,
+                          enablePullUp: true,
+                          controller: _refreshController,
+                          onRefresh: () async {
+                            await Future.delayed(Duration(seconds: 1));
+                            _refreshController.refreshCompleted();
+                          },
+                          onLoading: () async {
+                            await Future.delayed(Duration(seconds: 1));
+                            _refreshController.refreshCompleted();
+                          },
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            itemCount: activitiesData.activities.length,
+                            itemBuilder: (context, index) {
+                              // TODO: build widget by checking the activity type
+                              if (index % 3 == 0) {
+                                return NoteItem();
+                              } else if (index % 3 == 1) {
+                                return ReminderItem();
+                              } else if (index % 3 == 2) {
+                                return PlayerItem();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+          }),
     );
   }
 }
