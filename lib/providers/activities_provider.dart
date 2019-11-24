@@ -107,4 +107,11 @@ class Activities extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void clearActivities() {
+    if (_activities.isNotEmpty) {
+      _activities = [];
+    }
+    notifyListeners();
+  }
 }

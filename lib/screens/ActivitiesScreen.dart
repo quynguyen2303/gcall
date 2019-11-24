@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gcall/models/audioLog.dart';
 import 'package:gcall/models/note.dart';
 import 'package:gcall/models/reminder.dart';
+import 'package:gcall/screens/ContactDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:async/async.dart';
 
-import '../widgets/ContactActivityWidget.dart';
 import '../widgets/ActivityHeaderWidget.dart';
 import '../widgets/NoteItem.dart';
 import '../widgets/ReminderItem.dart';
@@ -44,7 +44,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ContactActivityWidget args =
+    final ContactDetailScreen args =
         ModalRoute.of(context).settings.arguments;
     _loadingActivities = _memoizer.runOnce(() {
       Provider.of<Activities>(
