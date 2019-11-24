@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../config/Constants.dart';
-import '../config/Pallete.dart' as Pallete;
-
-import '../models/reminder.dart';
+// import '../config/Pallete.dart' as Pallete;
 
 class ReminderItem extends StatelessWidget {
-  Reminder _reminder = Reminder(
-    contactName: 'Phu Quy',
-    receiverName: 'The Hien',
-    reminderText:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. ",
-    createdAt: DateTime.now(),
-    remindAt: DateTime.now().add(Duration(days: 3)),
-  );
+  final String contactName;
+  final String receiverName;
+  final String reminderText;
+  final String createdAt;
+  final String remindAt;
+
+  ReminderItem({
+    this.contactName,
+    this.receiverName,
+    this.reminderText,
+    this.createdAt,
+    this.remindAt,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +52,14 @@ class ReminderItem extends StatelessWidget {
                         style: kNormalTextStyle,
                         children: [
                           TextSpan(
-                            text: '${_reminder.contactName}',
+                            text: '$contactName',
                             style: kReminderTitleTextStyle,
                           ),
                         ],
                       ),
                     ),
                     Text(
-                      _reminder.date,
+                      createdAt,
                       style: kNoteTimeTextStyle,
                     ),
                   ],
@@ -82,7 +85,7 @@ class ReminderItem extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(top: 10.0, left: 20.0, bottom: 10.0),
             child: Text(
-              _reminder.reminderText,
+              reminderText,
               maxLines: 5,
               overflow: TextOverflow.ellipsis,
             ),
@@ -107,7 +110,7 @@ class ReminderItem extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.only(top: 3),
                         child: Text(
-                          _reminder.receiverName,
+                          receiverName,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -132,7 +135,7 @@ class ReminderItem extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.only(top: 3),
                         child: Text(
-                          _reminder.remindWhen,
+                          remindAt,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

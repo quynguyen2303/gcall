@@ -54,6 +54,7 @@ class Activities extends ChangeNotifier {
                   DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
               duration: activity['body']['duration'],
             );
+            print(activity['body']['duration']);
             _activities.add(audioLog);
           } else if (activity['type'] == 'note') {
             Note note = Note(
@@ -70,12 +71,14 @@ class Activities extends ChangeNotifier {
               contactName: contactName,
               idReceiver: activity['body']['remindedAgent'],
               receiverName: 'Default', // TODO: fix receiverName
+              reminderText: activity['text'],
               createdAt:
                   DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
               remindAt: DateTime.fromMillisecondsSinceEpoch(
                   activity['body']['duedate']),
               status: activity['body']['status'],
             );
+            print(reminder.idContact + reminder.contactName + reminder.idReceiver + reminder.reminderText);
             _activities.add(reminder);
           } else {
             print('The activity type is not correct!');

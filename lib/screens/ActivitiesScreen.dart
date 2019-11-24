@@ -44,8 +44,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ContactDetailScreen args =
-        ModalRoute.of(context).settings.arguments;
+    final ContactDetailScreen args = ModalRoute.of(context).settings.arguments;
     _loadingActivities = _memoizer.runOnce(() {
       Provider.of<Activities>(
         context,
@@ -94,11 +93,31 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             itemCount: activitiesData.activities.length,
                             itemBuilder: (context, index) {
                               if (activitiesData.activities[index] is Note) {
-                                return NoteItem();
-                              } else if (activitiesData.activities[index] is Reminder) {
-                                return ReminderItem();
-                              } else if (activitiesData.activities[index] is AudioLog) {
-                                return PlayerItem();
+                                Note _newNote = activitiesData.activities[index];
+                                return NoteItem(
+                                  contactName: _newNote.contactName,
+                                  noteText: _newNote.noteText,
+                                  date: _newNote.date,
+                                );
+                              } else if (activitiesData.activities[index]
+                                  is Reminder) {
+                                Reminder _newReminder = activitiesData.activities[index];
+                                return ReminderItem(
+                                  contactName: _newReminder.contactName,
+                                  receiverName: _newReminder.receiverName,
+                                  reminderText: _newReminder.reminderText,
+                                  createdAt: _newReminder.date,
+                                  remindAt: _newReminder.remindWhen,
+                                );
+                              } else if (activitiesData.activities[index]
+                                  is AudioLog) {
+                                    AudioLog _newAudioLog = activitiesData.activities[index];
+                                return PlayerItem(
+                                  contactName: _newAudioLog.contactName,
+                                  url: _newAudioLog.url,
+                                  createdAt: _newAudioLog.date,
+                                  duration: _newAudioLog.durationText,
+                                );
                               }
                             },
                           ),

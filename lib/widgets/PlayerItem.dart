@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../config/Constants.dart';
 
-import '../models/audioLog.dart';
-
 class PlayerItem extends StatefulWidget {
   @override
   _PlayerItemState createState() => _PlayerItemState();
+
+  final String url;
+  final String contactName;
+  final String createdAt;
+  final String duration;
+
+  PlayerItem({this.url, this.contactName, this.createdAt, this.duration});
 }
 
 class _PlayerItemState extends State<PlayerItem> {
-  AudioLog _audioLog =
-      AudioLog(url: '', contactName: 'Phu Quy', createdAt: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +54,14 @@ class _PlayerItemState extends State<PlayerItem> {
                         style: kNormalTextStyle,
                         children: [
                           TextSpan(
-                            text: '${_audioLog.contactName}',
+                            text: '${widget.contactName}',
                             style: kReminderTitleTextStyle,
                           ),
                         ],
                       ),
                     ),
                     Text(
-                      _audioLog.date,
+                      widget.createdAt,
                       style: kTimeCallHistoryTextStyle,
                     ),
                   ],
@@ -113,7 +116,7 @@ class _PlayerItemState extends State<PlayerItem> {
                   ),
                 ),
               ),
-              Text('24:56 / 01:02:31'),
+              Text('00:00 / ${widget.duration}'),
             ],
           ),
         ],
