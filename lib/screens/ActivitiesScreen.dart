@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gcall/models/audioLog.dart';
 import 'package:gcall/models/note.dart';
+import 'package:gcall/models/reminder.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:async/async.dart';
@@ -93,11 +94,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             itemCount: activitiesData.activities.length,
                             itemBuilder: (context, index) {
                               // TODO: build widget by checking the activity type
-                              if (index % 3 == 0) {
+                              if (activitiesData.activities[index] is Note) {
                                 return NoteItem();
-                              } else if (index % 3 == 1) {
+                              } else if (activitiesData.activities[index] is Reminder) {
                                 return ReminderItem();
-                              } else if (index % 3 == 2) {
+                              } else if (activitiesData.activities[index] is AudioLog) {
                                 return PlayerItem();
                               }
                             },
