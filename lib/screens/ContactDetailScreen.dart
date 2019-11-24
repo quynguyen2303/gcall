@@ -57,23 +57,25 @@ class ContactDetailScreen extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Center(
-      child: Container(
-        child: RaisedButton(
-          child: Text('Lịch sử hoạt động'),
-          onPressed: () async {
-            var nav = await Navigator.of(context).pushNamed(ActivitiesScreen.routeName,
-                arguments: ContactDetailScreen(
-                  contactId: args.contactId,
-                  contactName: args.contactName,
-                ));
-              if(nav == null) {
-                // print('Nav is $nav');
-                 Provider.of<Activities>(context, listen: false).clearActivities();
-              }
-          },
-        ),
-      ),
-    ),
+                child: Container(
+                  child: RaisedButton(
+                    child: Text('Lịch sử hoạt động'),
+                    onPressed: () async {
+                      var nav = await Navigator.of(context)
+                          .pushNamed(ActivitiesScreen.routeName,
+                              arguments: ContactDetailScreen(
+                                contactId: args.contactId,
+                                contactName: args.contactName,
+                              ));
+                      if (nav == null) {
+                        // print('Nav is $nav');
+                        Provider.of<Activities>(context, listen: false)
+                            .clearActivities();
+                      }
+                    },
+                  ),
+                ),
+              ),
             ),
           ],
         ),

@@ -93,7 +93,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             padding: EdgeInsets.symmetric(vertical: 15.0),
                             itemCount: activitiesData.activities.length,
                             itemBuilder: (context, index) {
-                              // TODO: build widget by checking the activity type
                               if (activitiesData.activities[index] is Note) {
                                 return NoteItem();
                               } else if (activitiesData.activities[index] is Reminder) {
