@@ -61,7 +61,7 @@ class ContactItem extends StatelessWidget {
                 style: kContactNameTextStyle,
               ),
             ),
-            Spacer(),
+            // Spacer(),
           ],
         ),
       ),
