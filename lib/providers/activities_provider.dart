@@ -78,7 +78,10 @@ class Activities extends ChangeNotifier {
                   activity['body']['duedate']),
               status: activity['body']['status'],
             );
-            print(reminder.idContact + reminder.contactName + reminder.idReceiver + reminder.reminderText);
+            print(reminder.idContact +
+                reminder.contactName +
+                reminder.idReceiver +
+                reminder.reminderText);
             _activities.add(reminder);
           } else {
             print('The activity type is not correct!');
@@ -116,5 +119,41 @@ class Activities extends ChangeNotifier {
       _activities = [];
     }
     notifyListeners();
+  }
+
+  Future<void> createNote(String idContact, String noteText) async {
+    final String url = kUrl + 'contact/$idContact/activity';
+
+    if (!_isSetInterceptor) {
+      _setUpDioWithHeader();
+    }
+
+    try {
+      Response response = await dio.post(
+        url,
+        data: {
+          "type" : "note",
+          "text" : noteText,
+        },
+      );
+
+      print(response.data);
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+
+      if (e.response != null) {
+        print('error data:');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print('error without data:');
+        print(e.request);
+        print(e.message);
+      }
+      throw (e);
+    }
   }
 }

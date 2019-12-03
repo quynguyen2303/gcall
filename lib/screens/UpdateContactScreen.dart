@@ -15,8 +15,8 @@ import '../providers/contacts_provider.dart';
 enum ContactSex { nam, nu, khac }
 
 class UpdateContactScreen extends StatefulWidget {
-  final String id;
-  UpdateContactScreen({this.id});
+  final String contactId;
+  UpdateContactScreen({this.contactId});
 
   static const routeName = './update_contact';
 
@@ -113,7 +113,7 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
     // final ContactDetailScreen args = ModalRoute.of(context).settings.arguments;
     // id = args.id;
     _isLoadingContact =
-        Provider.of<Contacts>(context, listen: false).getOneContact(widget.id);
+        Provider.of<Contacts>(context, listen: false).getOneContact(widget.contactId);
     super.initState();
   }
 

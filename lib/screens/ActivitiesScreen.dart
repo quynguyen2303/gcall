@@ -73,7 +73,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 return Consumer<Activities>(
                   builder: (context, activitiesData, _) => Column(
                     children: <Widget>[
-                      ActivityHeaderWidget(),
+                      ActivityHeaderWidget(args.contactId),
                       Expanded(
                         child: SmartRefresher(
                           enablePullDown: true,

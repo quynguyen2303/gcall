@@ -6,6 +6,10 @@ import '../config/Constants.dart';
 import '../screens/NoteScreen.dart';
 
 class ActivityHeaderWidget extends StatelessWidget {
+  final String idContact;
+
+  ActivityHeaderWidget(this.idContact);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +35,11 @@ class ActivityHeaderWidget extends StatelessWidget {
             title: 'Ghi chú',
             icon: kNoteAdd,
             onPressed: () {
-              Navigator.pushNamed(context, NoteScreen.routeName);
+              Navigator.pushNamed(
+                context,
+                NoteScreen.routeName,
+                arguments: ActivityHeaderWidget(this.idContact),
+              );
             },
           ),
           LabeledButton(
