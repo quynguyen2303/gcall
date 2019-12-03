@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../config/Pallete.dart' as Pallete;
 import '../config/Constants.dart';
 
+import '../screens/NoteScreen.dart';
+
 class ActivityHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,9 @@ class ActivityHeaderWidget extends StatelessWidget {
           LabeledButton(
             title: 'Ghi chú',
             icon: kNoteAdd,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, NoteScreen.routeName);
+            },
           ),
           LabeledButton(
             title: 'Nhắc nhở',

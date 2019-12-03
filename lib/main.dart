@@ -19,6 +19,7 @@ import 'screens/CreateContactScreen.dart';
 import 'screens/ContactDetailScreen.dart';
 import 'screens/UpdateContactScreen.dart';
 import 'screens/ActivitiesScreen.dart';
+import 'screens/NoteScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -77,9 +78,10 @@ class GCall extends StatelessWidget {
             CreateContactScreen.routeName: (context) => CreateContactScreen(),
             ContactDetailScreen.routeName: (context) => ContactDetailScreen(),
             ActivitiesScreen.routeName: (context) => ActivitiesScreen(),
+            NoteScreen.routeName: (context) => NoteScreen(),
             // UpdateContactScreen.routeName: (context) => UpdateContactScreen(),
           },
-          // Pass data to UpdateContactScreen to get it outside of build() from widget 
+          // Pass data to UpdateContactScreen to get it outside of build() from widget
           // pushName arguments can only access inside build()
           onGenerateRoute: (settings) {
             // If push to UpdateContactScreen

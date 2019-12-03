@@ -55,3 +55,9 @@ const kNormalTextStyle = TextStyle(
     fontWeight: FontWeight.normal,
     color: Colors.black,
     fontFamily: primaryFontFamily);
+const kNoteTextStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+  fontFamily: primaryFontFamily,
+);
