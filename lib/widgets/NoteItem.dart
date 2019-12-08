@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// import '../config/Pallete.dart' as Pallete;
+import '../config/Pallete.dart' as Pallete;
 import 'package:gcall/config/Constants.dart';
 
 class NoteItem extends StatelessWidget {
-
   final String noteText;
   final String contactName;
   final String date;
@@ -65,7 +65,66 @@ class NoteItem extends StatelessWidget {
                   size: 16,
                 ),
                 onPressed: () {
+                  print('Button clicked');
                   // TODO: add MORE functionality
+                  showGeneralDialog(
+                    barrierLabel: "Label",
+                    barrierDismissible: true,
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionDuration: Duration(milliseconds: 700),
+                    context: context,
+                    pageBuilder: (context, anim1, anim2) {
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          height: 200,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Sửa hoạt động'),
+                              ),
+                              Divider(),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Xoá hoạt động'),
+                              ),
+                              Divider(
+                                endIndent: 0,
+                                thickness: 5,
+                                // color: Colors.grey,
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('ĐÓNG', style: TextStyle(color: Pallete.primaryColor),),
+                              )
+                            ],
+                          ),
+                          margin:
+                              EdgeInsets.only(bottom: 50, left: 50, right: 50),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      );
+                    },
+                    transitionBuilder: (context, anim1, anim2, child) {
+                      return SlideTransition(
+                        position: Tween(begin: Offset(0, 1), end: Offset(0, 0))
+                            .animate(anim1),
+                        child: child,
+                      );
+                    },
+                  );
                 },
               ),
             ],
