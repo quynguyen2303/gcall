@@ -5,17 +5,21 @@ import '../config/Constants.dart';
 class PlayerItem extends StatefulWidget {
   @override
   _PlayerItemState createState() => _PlayerItemState();
-
+  final String idAudioLog;
   final String url;
   final String contactName;
   final String createdAt;
   final String duration;
 
-  PlayerItem({this.url, this.contactName, this.createdAt, this.duration});
+  PlayerItem(
+      {@required this.idAudioLog,
+      this.url,
+      this.contactName,
+      this.createdAt,
+      this.duration});
 }
 
 class _PlayerItemState extends State<PlayerItem> {
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -31,11 +35,10 @@ class _PlayerItemState extends State<PlayerItem> {
             children: <Widget>[
               Container(
                 decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1.0, color: Colors.black26),
-                    borderRadius: BorderRadius.circular(4),
-                  )
-                ),
+                    shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 1.0, color: Colors.black26),
+                  borderRadius: BorderRadius.circular(4),
+                )),
                 padding: EdgeInsets.all(3.0),
                 child: ImageIcon(
                   AssetImage(kPhoneIncoming),
@@ -80,7 +83,7 @@ class _PlayerItemState extends State<PlayerItem> {
             ],
           ),
           Row(
-             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Icon(Icons.play_arrow),

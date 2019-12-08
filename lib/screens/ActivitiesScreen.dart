@@ -80,7 +80,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           enablePullUp: true,
                           controller: _refreshController,
                           onRefresh: () async {
-                            await Future.delayed(Duration(seconds: 1));
+                            Provider.of<Activities>(context, listen: false)
+                                .clearActivities();
+                            await Provider.of<Activities>(context, listen: false)
+                                .fetchAndSetUpActivities(
+                                    args.contactId, args.contactName);
                             _refreshController.refreshCompleted();
                           },
                           onLoading: () async {
@@ -93,16 +97,21 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             itemCount: activitiesData.activities.length,
                             itemBuilder: (context, index) {
                               if (activitiesData.activities[index] is Note) {
-                                Note _newNote = activitiesData.activities[index];
+                                Note _newNote =
+                                    activitiesData.activities[index];
                                 return NoteItem(
+                                  idNote: _newNote.idNote,
+                                  idContact: _newNote.idContact,
                                   contactName: _newNote.contactName,
                                   noteText: _newNote.noteText,
                                   date: _newNote.date,
                                 );
                               } else if (activitiesData.activities[index]
                                   is Reminder) {
-                                Reminder _newReminder = activitiesData.activities[index];
+                                Reminder _newReminder =
+                                    activitiesData.activities[index];
                                 return ReminderItem(
+                                  idReminder: _newReminder.idReminder,
                                   contactName: _newReminder.contactName,
                                   receiverName: _newReminder.receiverName,
                                   reminderText: _newReminder.reminderText,
@@ -111,8 +120,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                 );
                               } else if (activitiesData.activities[index]
                                   is AudioLog) {
-                                    AudioLog _newAudioLog = activitiesData.activities[index];
+                                AudioLog _newAudioLog =
+                                    activitiesData.activities[index];
                                 return PlayerItem(
+                                  idAudioLog: _newAudioLog.idAudioLog,
                                   contactName: _newAudioLog.contactName,
                                   url: _newAudioLog.url,
                                   createdAt: _newAudioLog.date,

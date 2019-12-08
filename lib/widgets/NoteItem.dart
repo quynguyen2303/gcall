@@ -1,15 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gcall/screens/ActivitiesScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:gcall/providers/activities_provider.dart';
 
 import '../config/Pallete.dart' as Pallete;
-import 'package:gcall/config/Constants.dart';
+import '../config/Constants.dart';
+
+import '../screens/EditNoteScreen.dart';
 
 class NoteItem extends StatelessWidget {
+  final String idNote;
   final String noteText;
+  final String idContact;
   final String contactName;
   final String date;
 
-  NoteItem({this.noteText, this.contactName, this.date});
+  NoteItem({
+    @required this.idNote,
+    this.noteText,
+    @required this.idContact,
+    this.contactName,
+    this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +78,6 @@ class NoteItem extends StatelessWidget {
                   size: 16,
                 ),
                 onPressed: () {
-                  print('Button clicked');
-                  // TODO: add MORE functionality
                   showGeneralDialog(
                     barrierLabel: "Label",
                     barrierDismissible: true,
@@ -84,14 +95,58 @@ class NoteItem extends StatelessWidget {
                             children: <Widget>[
                               FlatButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  // TODO: Move to Note Screen with pre-info
+                                  Navigator.pushNamed(
+                                    context,
+                                    EditNoteScreen.routeName,
+                                    arguments: NoteItem(
+                                      idContact: this.idContact,
+                                      idNote: this.idNote,
+                                      noteText: this.noteText,
+                                    ),
+                                  );
                                 },
                                 child: Text('Sửa hoạt động'),
                               ),
                               Divider(),
                               FlatButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('Xoá Ghi chú!'),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text(
+                                              'Xoá',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            color: Colors.redAccent,
+                                            onPressed: () async {
+                                              await Provider.of<Activities>(
+                                                      context,
+                                                      listen: false)
+                                                  .deleteNote(this.idContact,
+                                                      this.idNote);
+                                              Navigator.popUntil(
+                                                  context,
+                                                  ModalRoute.withName(
+                                                      ActivitiesScreen
+                                                          .routeName));
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text('Huỷ'),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 child: Text('Xoá hoạt động'),
                               ),
@@ -104,7 +159,10 @@ class NoteItem extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text('ĐÓNG', style: TextStyle(color: Pallete.primaryColor),),
+                                child: Text(
+                                  'ĐÓNG',
+                                  style: TextStyle(color: Pallete.primaryColor),
+                                ),
                               )
                             ],
                           ),

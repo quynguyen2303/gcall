@@ -47,6 +47,7 @@ class Activities extends ChangeNotifier {
         (activity) {
           if (activity['type'] == 'calllog') {
             AudioLog audioLog = AudioLog(
+              idAudioLog: activity['_id'],
               url: activity['body']['recordUrl'],
               idContact: idContact,
               contactName: contactName,
@@ -58,6 +59,7 @@ class Activities extends ChangeNotifier {
             _activities.add(audioLog);
           } else if (activity['type'] == 'note') {
             Note note = Note(
+              idNote: activity['_id'],
               idContact: idContact,
               contactName: contactName,
               noteText: activity['text'],
@@ -67,6 +69,7 @@ class Activities extends ChangeNotifier {
             _activities.add(note);
           } else if (activity['type'] == 'reminder') {
             Reminder reminder = Reminder(
+              idReminder: activity['_id'],
               idContact: idContact,
               contactName: contactName,
               idReceiver: activity['body']['remindedAgent'],
@@ -114,6 +117,39 @@ class Activities extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteNote(String idContact, String idNote) async {
+    final url = kUrl + 'contact/$idContact/activity/$idNote';
+
+    if (!_isSetInterceptor) {
+      _setUpDioWithHeader();
+    }
+
+    try {
+      Response response = await dio.delete(
+        url,
+      );
+      notifyListeners();
+
+      print(response.data);
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+
+      if (e.response != null) {
+        print('error data:');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print('error without data:');
+        print(e.request);
+        print(e.message);
+      }
+      throw (e);
+    }
+  }
+
   void clearActivities() {
     if (_activities.isNotEmpty) {
       _activities = [];
@@ -132,10 +168,47 @@ class Activities extends ChangeNotifier {
       Response response = await dio.post(
         url,
         data: {
-          "type" : "note",
-          "text" : noteText,
+          "type": "note",
+          "text": noteText,
         },
       );
+
+      print(response.data);
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+
+      if (e.response != null) {
+        print('error data:');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print('error without data:');
+        print(e.request);
+        print(e.message);
+      }
+      throw (e);
+    }
+  }
+
+  Future<void> updateNote(
+      String idContact, String idNote, String noteText) async {
+    final url = kUrl + 'contact/$idContact/activity/$idNote';
+
+    if (!_isSetInterceptor) {
+      _setUpDioWithHeader();
+    }
+
+    try {
+      Response response = await dio.put(
+        url,
+        data: {
+          "text": noteText,
+        },
+      );
+      // notifyListeners();
 
       print(response.data);
     } on DioError catch (e) {

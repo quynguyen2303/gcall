@@ -41,61 +41,60 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
         children: <Widget>[
           Flexible(
             flex: 3,
-            child: Container(
-                child: Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                ButtonTheme(
-                  // padding: EdgeInsets.symmetric(horizontal: 21),
-                  minWidth: 20,
-                  shape: CircleBorder(),
-                  child: OutlineButton(
-                    padding: EdgeInsets.all(10.0),
-                    // borderSide: BorderSide(color: Colors.black),
-                    child: Text(
-                      widget.contactIni,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      return;
-                    },
-                  ),
+            ButtonTheme(
+              // padding: EdgeInsets.symmetric(horizontal: 21),
+              minWidth: 20,
+              shape: CircleBorder(),
+              child: OutlineButton(
+                padding: EdgeInsets.all(10.0),
+                // borderSide: BorderSide(color: Colors.black),
+                child: Text(
+                  widget.contactIni,
+                  style: TextStyle(fontSize: 20),
                 ),
-                Divider(
-                  color: Colors.white10,
-                  height: 10.0,
+                onPressed: () {
+                  return;
+                },
+              ),
+            ),
+            Divider(
+              color: Colors.white10,
+              height: 10.0,
+            ),
+            Text(
+              widget.contactName,
+              style: kHeaderTextStyle,
+            ),
+            Divider(
+              color: Colors.white10,
+              height: 10.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                LabeledButton(
+                  title: 'Gọi',
+                  icon: kPhoneButton,
+                  onPressed: () {},
                 ),
-                Text(
-                  widget.contactName,
-                  style: kHeaderTextStyle,
+                LabeledButton(
+                  title: 'Ghi chú',
+                  icon: kNoteAdd,
+                  onPressed: () {},
                 ),
-                Divider(
-                  color: Colors.white10,
-                  height: 10.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    LabeledButton(
-                      title: 'Gọi',
-                      icon: kPhoneButton,
-                      onPressed: () {},
-                    ),
-                    LabeledButton(
-                      title: 'Ghi chú',
-                      icon: kNoteAdd,
-                      onPressed: () {},
-                    ),
-                    LabeledButton(
-                      title: 'Nhắc nhở',
-                      icon: kReminder,
-                      onPressed: () {},
-                    ),
-                  ],
+                LabeledButton(
+                  title: 'Nhắc nhở',
+                  icon: kReminder,
+                  onPressed: () {},
                 ),
               ],
-            )),
+            ),
+              ],
+            ),
           ),
           // Divider(color: Colors?.white10,),
           Flexible(

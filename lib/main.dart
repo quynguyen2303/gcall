@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gcall/widgets/NoteItem.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -20,6 +21,7 @@ import 'screens/ContactDetailScreen.dart';
 import 'screens/UpdateContactScreen.dart';
 import 'screens/ActivitiesScreen.dart';
 import 'screens/NoteScreen.dart';
+import 'screens/EditNoteScreen.dart';
 
 import './config/Pallete.dart' as Pallete;
 
@@ -90,6 +92,17 @@ class GCall extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (context) {
                   return UpdateContactScreen(contactId: args.contactId);
+                },
+              );
+            } else if (settings.name == EditNoteScreen.routeName) {
+              final NoteItem args = settings.arguments;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return EditNoteScreen(
+                    idContact: args.idContact,
+                    idNote: args.idNote,
+                    previousNoteText: args.noteText,
+                  );
                 },
               );
             }

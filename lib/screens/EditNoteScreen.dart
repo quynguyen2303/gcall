@@ -3,25 +3,30 @@ import 'package:provider/provider.dart';
 
 import '../providers/activities_provider.dart';
 
-import '../widgets/ActivityHeaderWidget.dart';
-
 import '../config/Constants.dart';
 
-class NoteScreen extends StatefulWidget {
-  static const routeName = './note_screen';
-  final String idContact;
+import 'ContactDetailScreen.dart';
+import 'ActivitiesScreen.dart';
 
-  NoteScreen({
+class EditNoteScreen extends StatefulWidget {
+  static const routeName = './edit_note_screen';
+  final String idContact;
+  final String idNote;
+  final String previousNoteText;
+
+  EditNoteScreen({
     this.idContact,
+    this.idNote,
+    this.previousNoteText,
   });
 
   @override
-  _NoteScreenState createState() => _NoteScreenState();
+  _EditNoteScreenState createState() => _EditNoteScreenState();
 }
 
-class _NoteScreenState extends State<NoteScreen> {
-  TextEditingController _textEditingController = TextEditingController();
-  bool _validated = false;
+class _EditNoteScreenState extends State<EditNoteScreen> {
+  TextEditingController _textEditingController;
+  bool _validated = true;
 
   Future<void> createOrUpdateNote(String idContact) async {
     setState(() {
@@ -33,26 +38,32 @@ class _NoteScreenState extends State<NoteScreen> {
       return;
     }
     String noteText = _textEditingController.text;
-
     await Provider.of<Activities>(context, listen: false)
-        .createNote(idContact, noteText);
+        .updateNote(idContact, widget.idNote, noteText);
+    Navigator.popUntil(context, ModalRoute.withName(ActivitiesScreen.routeName));
+    // await Future.delayed(Duration(milliseconds: 100));
+    // Navigator.pop(context);
+  }
 
-    Navigator.pop(context);
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController =
+        TextEditingController(text: widget.previousNoteText);
   }
 
   @override
   Widget build(BuildContext context) {
-    ActivityHeaderWidget args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'TẠO GHI CHÚ',
+          'SỬA GHI CHÚ',
           style: kHeaderTextStyle,
         ),
         actions: <Widget>[
           FlatButton(
             onPressed: () {
-              createOrUpdateNote(args.idContact);
+              createOrUpdateNote(widget.idContact);
             },
             child: Text(
               'XONG',
@@ -75,7 +86,7 @@ class _NoteScreenState extends State<NoteScreen> {
           // expands: true,
           keyboardType: TextInputType.multiline,
           onSubmitted: (_) {
-            createOrUpdateNote(args.idContact);
+            createOrUpdateNote(widget.idContact);
           },
         ),
       ),

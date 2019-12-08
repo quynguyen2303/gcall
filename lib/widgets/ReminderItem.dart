@@ -4,6 +4,7 @@ import '../config/Constants.dart';
 // import '../config/Pallete.dart' as Pallete;
 
 class ReminderItem extends StatelessWidget {
+  final String idReminder;
   final String contactName;
   final String receiverName;
   final String reminderText;
@@ -11,6 +12,7 @@ class ReminderItem extends StatelessWidget {
   final String remindAt;
 
   ReminderItem({
+    @required this.idReminder,
     this.contactName,
     this.receiverName,
     this.reminderText,
