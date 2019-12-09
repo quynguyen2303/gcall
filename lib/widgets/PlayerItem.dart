@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:audioplayers/audioplayers.dart';
+
 import '../config/Constants.dart';
 
 class PlayerItem extends StatefulWidget {
@@ -20,6 +22,20 @@ class PlayerItem extends StatefulWidget {
 }
 
 class _PlayerItemState extends State<PlayerItem> {
+  AudioPlayer _audioPlayer = AudioPlayer();
+  Duration _position;
+  Duration _duration;
+
+  // get _durationText => _duration?.toString()?.split('.')?.first ?? '';
+  // get _positionText => _position?.toString()?.split('.')?.first ?? '';
+
+  play() async {
+    int result = await _audioPlayer.play(widget.url);
+    if (result == 1) {
+      print('Play success');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -86,7 +102,14 @@ class _PlayerItemState extends State<PlayerItem> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.play_arrow),
+              IconButton(
+                icon: Icon(
+                  Icons.play_arrow,
+                ),
+                onPressed: () {
+                  play();
+                },
+              ),
               SizedBox(
                 width: 200,
                 height: 30,

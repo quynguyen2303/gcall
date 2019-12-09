@@ -32,6 +32,7 @@ dependencies:
   contacts_service: ^0.3.4
   flushbar: ^1.9.0
   pull_to_refresh: ^1.5.7
+  audioplayers: ^0.13.5
 
 
 dev_dependencies:
