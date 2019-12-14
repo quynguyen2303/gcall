@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
-// import 'dart:convert';
+import 'dart:convert';
 
 import '../models/audioLog.dart';
 import '../models/activity.dart';
@@ -12,6 +12,9 @@ import '../config/Constants.dart';
 class Activities extends ChangeNotifier {
   final String _token;
   // final String idContact;
+  int _pageNumber = 1;
+  int _prevPageNumber = 0;
+  bool _isInit = true;
   bool _isSetInterceptor = false;
   List<Activity> _activities = [];
 
@@ -35,17 +38,32 @@ class Activities extends ChangeNotifier {
 
   Future<void> fetchAndSetUpActivities(
       String idContact, String contactName) async {
+    print('Activity page number is $_pageNumber');
+
     final String url = kUrl + 'contact/$idContact/activities';
+    // Check if it is already loaded this page number or not init
+    if (!_isInit && _prevPageNumber >= _pageNumber) {
+      print('Not Init or Already loaded this page number.');
+      return;
+    }
+
     if (!_isSetInterceptor) {
       _setUpDioWithHeader();
     }
 
     try {
-      Response response = await dio.get(url);
+      Response response = await dio.get(
+        url,
+        queryParameters: {
+          'page': _pageNumber,
+        },
+      );
+      Future.delayed(Duration(seconds: 2));
       print('The response length: ${response.data['result'].length}');
       response.data['result'].forEach(
         (activity) {
           if (activity['type'] == 'calllog') {
+            // print(activity['body']['recordUrl']);
             AudioLog audioLog = AudioLog(
               idAudioLog: activity['_id'],
               url: activity['body']['recordUrl'],
@@ -91,12 +109,18 @@ class Activities extends ChangeNotifier {
           }
         },
       );
-      // print(response.data['result'].length);
+      // Set the init to false and previousPage to current page
+      _isInit = false;
+      _prevPageNumber = _pageNumber;
 
+      // print(response.data['result'].length);
+      // print('The activity list length: ${_activities.length}');
+
+      // Print the activity log
       // JsonEncoder encoder = JsonEncoder.withIndent(' ');
       // String prettyPrint = encoder.convert(response.data['result']);
       // prettyPrint.split('\n').forEach((e) => print(e));
-      print('The activity list length: ${_activities.length}');
+
     } on DioError catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -150,10 +174,19 @@ class Activities extends ChangeNotifier {
     }
   }
 
+  Future<void> loadingMoreContacts(String idContact, String contactName) async {
+    _pageNumber++;
+    await fetchAndSetUpActivities(idContact, contactName);
+  }
+
   void clearActivities() {
     if (_activities.isNotEmpty) {
       _activities = [];
     }
+    _pageNumber = 1;
+    _prevPageNumber = 0;
+    _isInit = true;
+
     notifyListeners();
   }
 

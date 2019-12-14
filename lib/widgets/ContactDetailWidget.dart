@@ -39,7 +39,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          Flexible(
+          Expanded(
             flex: 3,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

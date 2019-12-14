@@ -43,7 +43,7 @@ class ContactDetailScreen extends StatelessWidget {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
-            Flexible(
+            Expanded(
               flex: 1,
               child: ContactDetailWidget(
                 args.contactId,
@@ -54,7 +54,7 @@ class ContactDetailScreen extends StatelessWidget {
                 args.contactGender,
               ),
             ),
-            Flexible(
+            Expanded(
               flex: 1,
               child: Center(
                 child: Container(

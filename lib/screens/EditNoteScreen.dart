@@ -40,7 +40,11 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     String noteText = _textEditingController.text;
     await Provider.of<Activities>(context, listen: false)
         .updateNote(idContact, widget.idNote, noteText);
-    Navigator.popUntil(context, ModalRoute.withName(ActivitiesScreen.routeName));
+    // Provider.of<Activities>(context, listen: false).clearActivities();
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName(ActivitiesScreen.routeName),
+    );
     // await Future.delayed(Duration(milliseconds: 100));
     // Navigator.pop(context);
   }
