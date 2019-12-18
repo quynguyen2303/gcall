@@ -63,7 +63,16 @@ class Activities extends ChangeNotifier {
       response.data['result'].forEach(
         (activity) {
           if (activity['type'] == 'calllog') {
-            // print(activity['body']['recordUrl']);
+            String _recordUrl =  activity['body']['recordUrl'];
+            bool _validUrl = Uri.parse(_recordUrl).isAbsolute;
+            print(_recordUrl);
+            print("The record url is $_validUrl");
+
+            if(!_validUrl) {
+              // Stop the adding if not a valid url
+              return;
+            }
+
             AudioLog audioLog = AudioLog(
               idAudioLog: activity['_id'],
               url: activity['body']['recordUrl'],
@@ -73,6 +82,7 @@ class Activities extends ChangeNotifier {
                   DateTime.fromMillisecondsSinceEpoch(activity['createdAt']),
               duration: activity['body']['duration'],
             );
+
             print(activity['body']['duration']);
             _activities.add(audioLog);
           } else if (activity['type'] == 'note') {

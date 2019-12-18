@@ -105,4 +105,15 @@ class Auth with ChangeNotifier {
       return true;
     }
   }
+
+  Future<void> signOut() async {
+    print('Signing out');
+    final prefs = await SharedPreferences.getInstance();
+    _token = null;
+    _userId = null;
+    
+    await prefs.clear();
+    notifyListeners();
+
+  }
 }

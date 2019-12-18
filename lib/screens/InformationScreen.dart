@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth_provider.dart';
+
 import '../config/Constants.dart';
 // import '../config/Pallete.dart' as Pallete;
 
 import '../providers/info_provider.dart';
+
+import '../screens/LoginScreen.dart';
 
 class InformationScreen extends StatefulWidget {
   static const routeName = './info';
@@ -123,7 +127,10 @@ class _InformationScreenState extends State<InformationScreen> {
                               minWidth: 300.0,
                               height: 50.0,
                               child: RaisedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Provider.of<Auth>(context, listen: false).signOut();
+                                  Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+                                },
                                 child: Text(
                                   'ĐĂNG XUẤT',
                                   style: TextStyle(
